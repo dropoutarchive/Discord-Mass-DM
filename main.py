@@ -40,7 +40,7 @@ class Discord(object):
         logging.info("Successfully loaded \x1b[38;5;9m%s\x1b[0m token(s)\n" % (len(self.tokens)))
         with open("data/message.json", "r") as file:
           data = json.load(file)
-        msg = data['message']
+        msg = data['content']
         embds = data['embeds']
         self.invite = input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Invite \x1b[38;5;9m->\x1b[0m ")
         self.message = msg
