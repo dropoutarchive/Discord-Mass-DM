@@ -1,4 +1,4 @@
-import os, sys, time, psutil, random, logging, asyncio
+import os, sys, time, psutil, random, logging, asyncio, json
 from tasksio import TaskPool
 from datetime import datetime
 from lib.scraper import Scraper
@@ -26,12 +26,16 @@ class Discord(object):
         self.channel_id = None
 
         try:
-            for line in open("data/tokens.txt"):
-                self.tokens.append(line.replace("\n", ""))
+            with open("data/tokens.json", "r") as file:
+                tkns = json.load(file)
+                if len(tkns) == 0:
+                  logging.info(f"Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
+                  sys.exit()
+                for tkn in tkns:
+                    self.tokens.append(tkn)
         except Exception:
-            open("data/tokens.txt", "a+").close()
-            logging.info("Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
-            sys.exit()
+          logging.info(f"Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
+          sys.exit()
 
         logging.info("Successfully loaded \x1b[38;5;9m%s\x1b[0m token(s)\n" % (len(self.tokens)))
         self.invite = input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Invite \x1b[38;5;9m->\x1b[0m ")
