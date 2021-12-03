@@ -1,3 +1,5 @@
+# fork is not done yet, please be patient
+
 <div id="top"></div>
 <p align="center">
   <img src="https://img.shields.io/github/contributors/dropout1337/Discord-Mass-DM.svg?style=for-the-badge"/>
