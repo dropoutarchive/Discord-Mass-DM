@@ -38,12 +38,13 @@ class Discord(object):
           sys.exit()
 
         logging.info("Successfully loaded \x1b[38;5;9m%s\x1b[0m token(s)\n" % (len(self.tokens)))
-        with open("data/config.json", "r") as file:
+        with open("data/message.json", "r") as file:
           data = json.load(file)
         msg = data['message']
-        invite_code = data['invite-code']
-        self.invite = invite_code
+        embds = data['embeds']
+        self.invite = input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Invite \x1b[38;5;9m->\x1b[0m ")
         self.message = msg
+        self.embed = embds
         try:
             self.delay = float(input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Delay \x1b[38;5;9m->\x1b[0m "))
         except Exception:
