@@ -1,19 +1,17 @@
-# fork is not done yet, please be patient
-
 <div id="top"></div>
 <p align="center">
-  <img src="https://img.shields.io/github/contributors/dropout1337/Discord-Mass-DM.svg?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/forks/dropout1337/Discord-Mass-DM.svg?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/stars/dropout1337/Discord-Mass-DM.svg?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/issues/dropout1337/Discord-Mass-DM.svg?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/license/dropout1337/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/contributors/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/forks/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/stars/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/issues/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/license/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
 </p>
   
 ---------------------------------------
   
 <br/>
 <div align="center">
-  <a href="https://github.com/dropout1337/Discord-Mass-DM">
+  <a href="https://github.com/hoemotion/Discord-Mass-DM">
     <img src="https://i.imgur.com/9l4pHEN.png" alt="Logo" width="120" height="120">
   </a>
   
@@ -23,9 +21,9 @@
     Scrapes users from a discord server to promote/mass dm
     <br />
     <br />
-    <a href="https://github.com/dropout1337/Discord-Mass-DM/issues">Report Bug</a>
+    <a href="https://github.com/hoemotion/Discord-Mass-DM/issues">Report Bug</a>
     ·
-    <a href="https://github.com/dropout1337/Discord-Mass-DM/issues">Request Feature</a>
+    <a href="https://github.com/hoemotion/Discord-Mass-DM/issues">Request Feature</a>
   </p>
 </div>
   
@@ -36,9 +34,11 @@
 * Easy to use
 * Free
 * Auto scrapes
-* Multiline message support
+* Multiline message and embed support
+* Server Joiner and Leaver
 
 ---------------------------------------
 
 ### Contact
+Join the [support server](https://discord.com/invite/verQuxaBqy)
 View my contact information on my [website](https://dropout.black/)
