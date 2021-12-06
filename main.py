@@ -3,6 +3,7 @@ from tasksio import TaskPool
 from datetime import datetime
 from lib.scraper import Scraper
 from aiohttp import ClientSession
+from colorama import Fore
 
 logging.basicConfig(
     level=logging.INFO,
@@ -24,6 +25,9 @@ class Discord(object):
         self.guild_name = None
         self.guild_id = None
         self.channel_id = None
+        self.g = Fore.LIGHTGREEN_EX
+        self.red = Fore.RED
+        self.rst = Fore.RESET
 
         try:
             with open("data/tokens.json", "r") as file:
@@ -43,12 +47,17 @@ class Discord(object):
         msg = data['content']
         embds = data['embeds']
         self.invite = input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Invite \x1b[38;5;9m->\x1b[0m ")
+        self.leaving = input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Leave Server after Mass DM? (y/n) \x1b[38;5;9m->\x1b[0m ")
         self.message = msg
         self.embed = embds
         try:
             self.delay = float(input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Delay \x1b[38;5;9m->\x1b[0m "))
         except Exception:
             self.delay = 0
+        try:
+            self.ratelimit_delay = float(input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Ratelimit Delay \x1b[38;5;9m->\x1b[0m "))
+        except Exception:
+            self.ratelimit_delay = 300
             
         print()
 
@@ -101,7 +110,7 @@ class Discord(object):
                         self.tokens.remove(token)
                     if response.status == 429:
                         logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        time.sleep(self.delay)
+                        time.sleep(self.ratelimit_delay)
                         await self.login(token)
         except Exception:
             await self.login(token)
@@ -125,8 +134,8 @@ class Discord(object):
                         self.tokens.remove(token)
                     elif response.status == 429:
                         logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        time.sleep(self.delay)
-                        self.tokens.remove(token)
+                        time.sleep(self.ratelimit_delay)
+                        await self.join(token)
                     else:
                         self.tokens.remove(token)
         except Exception:
@@ -150,7 +159,7 @@ class Discord(object):
                         self.tokens.remove(token)
                     elif response.status == 429:
                         logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        time.sleep(self.delay)
+                        time.sleep(self.ratelimit_delay)
                         return await self.create_dm(token, user)
                     elif response.status == 400:
                         logging.info("Can\'t create DM with yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
@@ -173,7 +182,7 @@ class Discord(object):
                         return False
                     elif response.status == 403 and json["code"] == 40003:
                         logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        time.sleep(self.delay)
+                        time.sleep(self.ratelimit_delay)
                         await self.direct_message(token, channel)
                     elif response.status == 403 and json["code"] == 50007:
                         logging.info("User has direct messages disabled \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
@@ -235,8 +244,8 @@ class Discord(object):
                         time.sleep(self.ratelimit_delay)
                         await self.leave(token)
                     else:
-                        print(f"{response.status} | {message} | {code} | {self.token}")
-                    self.tokens.remove(token)
+                        print(f"{response.status} | {message} | {code} | \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
+                            token[:59]))
 
 
         except Exception:
@@ -292,14 +301,20 @@ class Discord(object):
                 else:
                     self.stop()
 
-        async with TaskPool(1_000) as pool:
-            if len(self.tokens) != 0:
-                for token in self.tokens:
-                    await pool.put(self.leave(token))
-                if self.delay != 0:
-                    await asyncio.sleep(self.delay)
-            else:
-                self.stop()
+        if self.leaving == "y":
+            print()
+            logging.info("Leaving %s" % self.guild_name)
+            print()
+            async with TaskPool(1_000) as pool:
+                if len(self.tokens) != 0:
+                    for token in self.tokens:
+                        await pool.put(self.leave(token))
+                    if self.delay != 0:
+                        await asyncio.sleep(self.delay)
+                else:
+                    self.stop()
+        else:
+            self.stop()
 
 if __name__ == "__main__":
     client = Discord()
