@@ -152,6 +152,8 @@ class Discord(object):
                         logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         time.sleep(self.delay)
                         return await self.create_dm(token, user)
+                    elif response.status == 400:
+                        logging.info("Can\'t create DM with yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     else:
                         return False
         except Exception:
@@ -183,6 +185,8 @@ class Discord(object):
                         logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         time.sleep(self.delay)
                         await self.direct_message(token, channel)
+                    elif response.status == 400:
+                        logging.info("Can\'t DM yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     else:
                         return False
         except Exception:
@@ -195,6 +199,48 @@ class Discord(object):
         response = await self.direct_message(token, channel)
         if response == False:
             return await self.send(random.choice(self.tokens), user)
+
+    async def leave(self, token: str):
+        try:
+            headers = await self.headers(token)
+            async with ClientSession(headers=headers) as client:
+                async with client.delete(f"https://discord.com/api/v9/users/@me/guilds/{self.guild_id}", json={"lurking": False}) as response:
+                    json = await response.json()
+                    message = json["message"]
+                    code = json["code"]
+                    if response.status == 200:
+                        logging.info(
+                            f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
+                            token[:59]))
+                    elif response.status == 204:
+                        logging.info(
+                            f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
+                            token[:59]))
+                    elif response.status == 404:
+                        logging.info(
+                            f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
+                            token[:59]))
+                    elif response.status == 403:
+                        logging.info(
+                            f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
+                            token[:59]))
+                    elif response.status == 401:
+                        logging.info(
+                            f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
+                            token[:59]))
+                    elif response.status == 429:
+                        logging.info(
+                            f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
+                            token[:59]))
+                        time.sleep(self.ratelimit_delay)
+                        await self.leave(token)
+                    else:
+                        print(f"{response.status} | {message} | {code} | {self.token}")
+                    self.tokens.remove(token)
+
+
+        except Exception:
+            await self.leave(token)
 
     async def start(self):
         if len(self.tokens) == 0:
@@ -245,6 +291,15 @@ class Discord(object):
                     if self.delay != 0: await asyncio.sleep(self.delay)
                 else:
                     self.stop()
+
+        async with TaskPool(1_000) as pool:
+            if len(self.tokens) != 0:
+                for token in self.tokens:
+                    await pool.put(self.leave(token))
+                if self.delay != 0:
+                    await asyncio.sleep(self.delay)
+            else:
+                self.stop()
 
 if __name__ == "__main__":
     client = Discord()
