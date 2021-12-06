@@ -1,4 +1,10 @@
-import discum
+import os
+try:
+    import discum
+except ImportError:
+    os.system("pip install discum")
+    os.system("python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M#egg=discum")
+    
 
 class Scraper(object):
 
