@@ -40,8 +40,8 @@
 ---------------------------------------
 
 ### Milestones
-* 10 Stars: Proxy Support
-* 20 Stars: Auto Proxy Scraper
+* 30 Stars / Followers: Proxy Support
+* 50 Stars / Followers: Auto Proxy Scraper
 
 ---------------------------------------
 
