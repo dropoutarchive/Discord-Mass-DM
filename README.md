@@ -33,9 +33,10 @@
 * Asynchronous
 * Easy to use
 * Free
-* Auto scrapes
+* Auto Scrapes User
 * Multiline message and embed support
 * Server Joiner and Leaver
+* Multiple Tokens
 
 ---------------------------------------
 
