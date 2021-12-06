@@ -13,10 +13,10 @@ logging.basicConfig(
 class Discord(object):
 
     def __init__(self):
-        if sys.platform == "linux":
-            self.clear = lambda: os.system("clear")
-        else:
+        if os.name == 'nt':
             self.clear = lambda: os.system("cls")
+        else:
+            self.clear = lambda: os.system("clear")
 
         self.clear()
         self.tokens = []
@@ -161,7 +161,7 @@ class Discord(object):
         try:
             headers = await self.headers(token)
             async with ClientSession(headers=headers) as client:
-                async with client.post("https://discord.com/api/v9/channels/%s/messages" % (channel), json={"content": self.message, "nonce": self.nonce(), "tts":False}) as response:
+                async with client.post("https://discord.com/api/v9/channels/%s/messages" % (channel), json={"content": self.message, "embeds": self.embed, "nonce": self.nonce(), "tts":False}) as response:
                     json = await response.json()
                     if response.status == 200:
                         logging.info("Successfully sent message \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
