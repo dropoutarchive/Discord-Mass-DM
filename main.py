@@ -33,15 +33,15 @@ class Discord(object):
             with open("data/tokens.json", "r") as file:
                 tkns = json.load(file)
                 if len(tkns) == 0:
-                  logging.info(f"Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
+                  logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
                   sys.exit()
                 for tkn in tkns:
                     self.tokens.append(tkn)
         except Exception:
-          logging.info(f"Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
+          logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
           sys.exit()
 
-        logging.info("Successfully loaded \x1b[38;5;9m%s\x1b[0m token(s)\n" % (len(self.tokens)))
+        logging.info(f"{self.g}[+]{self.rst} Successfully loaded \x1b[38;5;9m%s\x1b[0m token(s)\n" % (len(self.tokens)))
         with open("data/message.json", "r") as file:
           data = json.load(file)
         msg = data['content']
@@ -101,15 +101,15 @@ class Discord(object):
             async with ClientSession(headers=headers) as client:
                 async with client.get("https://discord.com/api/v9/users/@me/library") as response:
                     if response.status == 200:
-                        logging.info("Successfully logged in \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.g}[+]{self.rst} Successfully logged in \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     if response.status == 401:
-                        logging.info("Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         self.tokens.remove(token)
                     if response.status == 403:
-                        logging.info("Locked account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Locked account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         self.tokens.remove(token)
                     if response.status == 429:
-                        logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.login(token)
         except Exception:
@@ -125,15 +125,15 @@ class Discord(object):
                         self.guild_name = json["guild"]["name"]
                         self.guild_id = json["guild"]["id"]
                         self.channel_id = json["channel"]["id"]
-                        logging.info("Successfully joined %s \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (self.guild_name[:20], token[:59]))
+                        logging.info(f"{self.g}[+]{self.rst} Successfully joined %s \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (self.guild_name[:20], token[:59]))
                     elif response.status == 401:
-                        logging.info("Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 403:
-                        logging.info("Locked account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Locked account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 429:
-                        logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.join(token)
                     else:
@@ -148,21 +148,21 @@ class Discord(object):
                 async with client.post("https://discord.com/api/v9/users/@me/channels", json={"recipients": [user]}) as response:
                     json = await response.json()
                     if response.status == 200:
-                        logging.info("Successfully created direct message with %s \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (json["recipients"][0]["username"], token[:59]))
+                        logging.info(f"{self.g}[+]{self.rst} Successfully created direct message with %s \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (json["recipients"][0]["username"], token[:59]))
                         return json["id"]
                     elif response.status == 401:
-                        logging.info("Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         self.tokens.remove(token)
                         return False
                     elif response.status == 403:
-                        logging.info("Cant message user \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Cant message user \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 429:
-                        logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         return await self.create_dm(token, user)
                     elif response.status == 400:
-                        logging.info("Can\'t create DM with yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Can\'t create DM with yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     else:
                         return False
         except Exception:
@@ -175,27 +175,27 @@ class Discord(object):
                 async with client.post("https://discord.com/api/v9/channels/%s/messages" % (channel), json={"content": self.message, "embeds": self.embed, "nonce": self.nonce(), "tts":False}) as response:
                     json = await response.json()
                     if response.status == 200:
-                        logging.info("Successfully sent message \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.g}[+]{self.rst} Successfully sent message \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     elif response.status == 401:
-                        logging.info("Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         self.tokens.remove(token)
                         return False
                     elif response.status == 403 and json["code"] == 40003:
-                        logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.direct_message(token, channel)
                     elif response.status == 403 and json["code"] == 50007:
-                        logging.info("User has direct messages disabled \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} User has direct messages disabled \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     elif response.status == 403 and json["code"] == 40002:
-                        logging.info("Locked \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Locked \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         self.tokens.remove(token)
                         return False
                     elif response.status == 429:
-                        logging.info("Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         time.sleep(self.delay)
                         await self.direct_message(token, channel)
                     elif response.status == 400:
-                        logging.info("Can\'t DM yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Can\'t DM yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     else:
                         return False
         except Exception:
@@ -218,34 +218,21 @@ class Discord(object):
                     message = json["message"]
                     code = json["code"]
                     if response.status == 200:
-                        logging.info(
-                            f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
-                            token[:59]))
+                        logging.info(f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     elif response.status == 204:
-                        logging.info(
-                            f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
-                            token[:59]))
+                        logging.info(f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     elif response.status == 404:
-                        logging.info(
-                            f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
-                            token[:59]))
+                        logging.info(f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     elif response.status == 403:
-                        logging.info(
-                            f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
-                            token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     elif response.status == 401:
-                        logging.info(
-                            f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
-                            token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                     elif response.status == 429:
-                        logging.info(
-                            f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
-                            token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.leave(token)
                     else:
-                        print(f"{response.status} | {message} | {code} | \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (
-                            token[:59]))
+                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} {response.status} | {message} | {code} | \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
 
 
         except Exception:
