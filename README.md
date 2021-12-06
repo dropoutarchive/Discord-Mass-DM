@@ -39,6 +39,12 @@
 
 ---------------------------------------
 
+### Milestones
+* 10 Stars: Proxy Support
+* 20 Stars: Auto Proxy Scraper
+
+---------------------------------------
+
 ### Contact
 Join the [support server](https://discord.com/invite/verQuxaBqy)
 
