@@ -1,9 +1,16 @@
-import os, sys, time, psutil, random, logging, asyncio, json
-from tasksio import TaskPool
+import os, sys, time, random, logging, asyncio, json
 from datetime import datetime
 from lib.scraper import Scraper
-from aiohttp import ClientSession
-from colorama import Fore
+try:
+    import psutil
+    from colorama import Fore
+    from aiohttp import ClientSession
+    from tasksio import TaskPool
+except ImportError:
+    os.system("pip install colorama")
+    os.system("pip install aiohttp")
+    os.system("pip install tasksio")
+    os.system("pip install psutil")
 
 logging.basicConfig(
     level=logging.INFO,
