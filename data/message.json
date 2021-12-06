@@ -1,5 +1,5 @@
 {
-    "content" : "Hi Fellow Discord User \nThis is an example message! Use \n to change lines and to ping people use <user>",
+    "content" : "Hi Fellow Discord User \nThis is an example message! Use \n to change lines.",
     "embeds": 
         [{
           "type": "rich",
@@ -14,7 +14,7 @@
             },
             {
               "name": "You can add multiple of these lol",
-              "value": "You can add images too and set their size"
+              "value": "You can add images too and set their size\n[click here](https://github.com/hoemotion/Discord-Mass-DM/)"
             }
           ],
           "image": {
@@ -27,7 +27,7 @@
             "url": "https://autocode.com/tools/discord/embed-builder/",
             "icon_url": "https://i.imgur.com/RCBBege.png"
           },
-          "url": "https://tokenlogged.info"
+          "url": "https://github.com/hoemotion"
         }]
       
 }
