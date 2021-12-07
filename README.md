@@ -20,6 +20,8 @@
   <p align="center">
     Scrapes users from a discord server to promote/mass dm
     <br />
+    (project is still beta)
+    <br />
     <br />
     <a href="https://github.com/hoemotion/Discord-Mass-DM/issues">Report Bug</a>
     ·
