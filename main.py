@@ -199,7 +199,7 @@ class Discord(object):
                         return False
                     elif response.status == 429:
                         logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        time.sleep(self.delay)
+                        time.sleep(self.ratelimit_delay)
                         await self.direct_message(token, channel)
                     elif response.status == 400:
                         logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Can\'t DM yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
