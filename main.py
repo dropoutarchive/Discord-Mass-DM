@@ -1,16 +1,15 @@
-import os, sys, time, random, logging, asyncio, json
+import os, sys, time, random, asyncio, json
 from datetime import datetime
 from lib.scraper import Scraper
 try:
-    import psutil
-    from colorama import Fore
+    import psutil, logging
     from aiohttp import ClientSession
     from tasksio import TaskPool
 except ImportError:
-    os.system("pip install colorama")
     os.system("pip install aiohttp")
     os.system("pip install tasksio")
     os.system("pip install psutil")
+    os.system("pip install logging")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -32,37 +31,43 @@ class Discord(object):
         self.guild_name = None
         self.guild_id = None
         self.channel_id = None
-        self.g = Fore.LIGHTGREEN_EX
-        self.red = Fore.RED
-        self.rst = Fore.RESET
+        self.g = "\033[92m"
+        self.red = "\x1b[38;5;9m"
+        self.rst = "\x1b[0m"
+        self.success = f"{self.g}[+]{self.rst} "
+        self.err = f"{self.red}[{self.rst}!{self.red}]{self.rst} "
+        self.opbracket = f"{self.red}({self.rst}"
+        self.closebrckt = f"{self.red}){self.rst}"
+        self.question = "\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m "
+        self.arrow = " \x1b[38;5;9m->\x1b[0m "
 
         try:
             with open("data/tokens.json", "r") as file:
                 tkns = json.load(file)
                 if len(tkns) == 0:
-                  logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
+                  logging.info(f"{self.err} Please insert your tokens {self.opbracket}tokens.json{self.closebrckt}")
                   sys.exit()
                 for tkn in tkns:
                     self.tokens.append(tkn)
         except Exception:
-          logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Please insert your tokens \x1b[38;5;9m(\x1b[0mtokens.json\x1b[38;5;9m)\x1b[0m")
+          logging.info(f"{self.err} Please insert your tokens {self.opbracket}tokens.json{self.closebrckt}")
           sys.exit()
 
-        logging.info(f"{self.g}[+]{self.rst} Successfully loaded \x1b[38;5;9m%s\x1b[0m token(s)\n" % (len(self.tokens)))
+        logging.info(f"{self.g}[+]{self.rst} Successfully loaded {self.red}%s{self.rst} token(s)\n" % (len(self.tokens)))
         with open("data/message.json", "r") as file:
           data = json.load(file)
         msg = data['content']
         embds = data['embeds']
-        self.invite = input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Invite \x1b[38;5;9m->\x1b[0m ")
-        self.leaving = input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Leave Server after Mass DM? (y/n) \x1b[38;5;9m->\x1b[0m ")
+        self.invite = input(f"{self.question}Invite{self.arrow}")
+        self.leaving = input(f"{self.question}Leave Server after Mass DM? (y/n){self.arrow}")
         self.message = msg
         self.embed = embds
         try:
-            self.delay = float(input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Delay \x1b[38;5;9m->\x1b[0m "))
+            self.delay = float(input(f"{self.question}Delay{self.arrow}"))
         except Exception:
             self.delay = 0
         try:
-            self.ratelimit_delay = float(input("\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m Ratelimit Delay \x1b[38;5;9m->\x1b[0m "))
+            self.ratelimit_delay = float(input(f"{self.question}Ratelimit Delay{self.arrow}"))
         except Exception:
             self.ratelimit_delay = 300
             
@@ -105,18 +110,18 @@ class Discord(object):
     async def login(self, token: str):
         try:
             headers = await self.headers(token)
-            async with ClientSession(headers=headers) as client:
-                async with client.get("https://discord.com/api/v9/users/@me/library") as response:
+            async with ClientSession(headers=headers) as mass_dm_brrr:
+                async with mass_dm_brrr.get("https://discord.com/api/v9/users/@me/library") as response:
                     if response.status == 200:
-                        logging.info(f"{self.g}[+]{self.rst} Successfully logged in \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.success}Successfully logged in {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     if response.status == 401:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     if response.status == 403:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Locked account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Locked account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     if response.status == 429:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.login(token)
         except Exception:
@@ -125,24 +130,27 @@ class Discord(object):
     async def join(self, token: str):
         try:
             headers = await self.headers(token)
-            async with ClientSession(headers=headers) as client:
-                async with client.post("https://discord.com/api/v9/invites/%s" % (self.invite), json={}) as response:
+            async with ClientSession(headers=headers) as hoemotion:
+                async with hoemotion.post("https://discord.com/api/v9/invites/%s" % (self.invite), json={}) as response:
                     json = await response.json()
                     if response.status == 200:
                         self.guild_name = json["guild"]["name"]
                         self.guild_id = json["guild"]["id"]
                         self.channel_id = json["channel"]["id"]
-                        logging.info(f"{self.g}[+]{self.rst} Successfully joined %s \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (self.guild_name[:20], token[:59]))
+                        logging.info(f"{self.success}Successfully joined %s {self.opbracket}%s{self.closebrckt}" % (self.guild_name[:20], token[:59]))
                     elif response.status == 401:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 403:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Locked account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Locked account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 429:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.join(token)
+                    elif response.status == 404:
+                        logging.info(f"{self.err}Server-Invite is invalid or has expired :/")
+                        self.stop()
                     else:
                         self.tokens.remove(token)
         except Exception:
@@ -151,68 +159,83 @@ class Discord(object):
     async def create_dm(self, token: str, user: str):
         try:
             headers = await self.headers(token)
-            async with ClientSession(headers=headers) as client:
-                async with client.post("https://discord.com/api/v9/users/@me/channels", json={"recipients": [user]}) as response:
+            async with ClientSession(headers=headers) as chupapi_munanyo:
+                async with chupapi_munanyo.post("https://discord.com/api/v9/users/@me/channels", json={"recipients": [user]}) as response:
                     json = await response.json()
                     if response.status == 200:
-                        logging.info(f"{self.g}[+]{self.rst} Successfully created direct message with %s \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (json["recipients"][0]["username"], token[:59]))
+                        logging.info(f"{self.success}Successfully created direct message with %s {self.opbracket}%s{self.closebrckt}" % (json["recipients"][0]["username"], token[:59]))
                         return json["id"]
                     elif response.status == 401:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                         return False
                     elif response.status == 403:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Cant message user \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Can\'t message user {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 429:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         return await self.create_dm(token, user)
                     elif response.status == 400:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Can\'t create DM with yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}Can\'t create DM with yourself! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    elif response.status == 404:
+                        logging.info(f"{self.err}User doesn\'t exist! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     else:
                         return False
         except Exception:
             return await self.create_dm(token, user)
 
-    async def direct_message(self, token: str, channel: str):
-        try:
-            headers = await self.headers(token)
-            async with ClientSession(headers=headers) as client:
-                async with client.post("https://discord.com/api/v9/channels/%s/messages" % (channel), json={"content": self.message, "embeds": self.embed, "nonce": self.nonce(), "tts":False}) as response:
-                    json = await response.json()
-                    if response.status == 200:
-                        logging.info(f"{self.g}[+]{self.rst} Successfully sent message \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                    elif response.status == 401:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Invalid account \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        self.tokens.remove(token)
-                        return False
-                    elif response.status == 403 and json["code"] == 40003:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        time.sleep(self.ratelimit_delay)
-                        await self.direct_message(token, channel)
-                    elif response.status == 403 and json["code"] == 50007:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} User has direct messages disabled \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                    elif response.status == 403 and json["code"] == 40002:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Locked \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        self.tokens.remove(token)
-                        return False
-                    elif response.status == 429:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Ratelimited \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                        time.sleep(self.ratelimit_delay)
-                        await self.direct_message(token, channel)
-                    elif response.status == 400:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} Can\'t DM yourself! \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
-                    else:
-                        return False
-        except Exception:
-            await self.direct_message(token, channel)
+
+    async def direct_message(self, token: str, channel: str, user):
+        embed = self.get_user_in_embed(user)
+        message = self.get_user_in_message(user)
+        headers = await self.headers(token)
+        async with ClientSession(headers=headers) as virgin:
+            async with virgin.post("https://discord.com/api/v9/channels/%s/messages" % (channel), json={"content": message, "embeds": embed, "nonce": self.nonce(),"tts": False}) as response:
+                json = await response.json()
+                if response.status == 200:
+                    logging.info(f"{self.success}Successfully sent message {self.opbracket}%s{self.red}){self.rst}" % (token[:59]))
+                elif response.status == 401:
+                    logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    self.tokens.remove(token)
+                    return False
+                elif response.status == 403 and json["code"] == 40003:
+                    logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    time.sleep(self.ratelimit_delay)
+                    await self.direct_message(token, channel, user)
+                elif response.status == 403 and json["code"] == 50007:
+                    logging.info(f"{self.err}User has direct messages disabled {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                elif response.status == 403 and json["code"] == 40002:
+                    logging.info(f"{self.err}Locked {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    self.tokens.remove(token)
+                    return False
+                elif response.status == 429:
+                    logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    time.sleep(self.ratelimit_delay)
+                    await self.direct_message(token, channel, user)
+                elif response.status == 400:
+                    logging.info(f"{self.err}Can\'t DM yourself! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                elif response.status == 404:
+                    logging.info(f"{self.err}User doesn\'t exist! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                else:
+                    return False
+
+    def get_user_in_message(self, user: str = None):
+        mssage = self.message
+        message = mssage.replace("<user>", f"<@{user}>")
+        return message
+
+    def get_user_in_embed(self, user: str = None):
+        embd = json.dumps(self.embed)
+        embedd = embd.replace("<user>", f"<@{user}>")
+        embed = json.loads(embedd)
+        return embed
 
     async def send(self, token: str, user: str):
         channel = await self.create_dm(token, user)
         if channel == False:
             return await self.send(random.choice(self.tokens), user)
-        response = await self.direct_message(token, channel)
+        response = await self.direct_message(token, channel, user)
         if response == False:
             return await self.send(random.choice(self.tokens), user)
 
@@ -225,21 +248,21 @@ class Discord(object):
                     message = json["message"]
                     code = json["code"]
                     if response.status == 200:
-                        logging.info(f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     elif response.status == 204:
-                        logging.info(f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     elif response.status == 404:
-                        logging.info(f"{self.g}[+]{self.rst} Successfully left the Guild \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     elif response.status == 403:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}{message} | {code} {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     elif response.status == 401:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}{message} | {code} {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     elif response.status == 429:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} {message} | {code} \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}{message} | {code} {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.leave(token)
                     else:
-                        logging.info(f"{self.red}[{self.rst}!{self.red}]{self.rst} {response.status} | {message} | {code} | \x1b[38;5;9m(\x1b[0m%s\x1b[38;5;9m)\x1b[0m" % (token[:59]))
+                        logging.info(f"{self.err}{response.status} | {message} | {code} | {self.opbracket}%s{self.closebrckt}" % (token[:59]))
 
 
         except Exception:
@@ -281,7 +304,7 @@ class Discord(object):
         self.users = scraper.fetch()
 
         print()
-        logging.info("Successfully scraped \x1b[38;5;9m%s\x1b[0m members" % (len(self.users)))
+        logging.info(f"Successfully scraped {self.red}%s{self.rst} members" % (len(self.users)))
         logging.info("Sending messages.")
         print()
 
@@ -303,11 +326,14 @@ class Discord(object):
                 if len(self.tokens) != 0:
                     for token in self.tokens:
                         await pool.put(self.leave(token))
-                    if self.delay != 0:
-                        await asyncio.sleep(self.delay)
+                        if self.delay != 0:
+                            await asyncio.sleep(self.delay)
+                    logging.info("All Tasks are done")
+                    self.stop()
                 else:
                     self.stop()
         else:
+            logging.info("All Tasks are done")
             self.stop()
 
 if __name__ == "__main__":
