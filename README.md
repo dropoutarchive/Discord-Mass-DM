@@ -54,4 +54,4 @@
 ### Contact
 Join the [support server](https://discord.com/invite/verQuxaBqy)
 
-View my contact information on my [website](https://dropout.black/)
+View dropout's contact information on his [website](https://dropout.black/)
