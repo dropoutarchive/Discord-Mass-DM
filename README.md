@@ -41,10 +41,10 @@
 ---------------------------------------
 
 ### Milestones
+
 * 15 Stars / 25 Followers: Blacklist User (avoid dming them)
-* 20 Stars / 30 Followers: Mention User
-* 30 Stars / 35 Followers: Proxy Support
-* 50 Stars / 50 Followers: Auto Proxy Scraper
+* 20 Stars / 35 Followers: Proxy Support
+* 40 Stars / 40 Followers: Auto Proxy Scraper
 
 ---------------------------------------
 
