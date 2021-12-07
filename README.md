@@ -46,7 +46,8 @@
 
 * 15 Stars / 25 Followers: Blacklist User (avoid dming them)
 * 20 Stars / 35 Followers: Proxy Support
-* 40 Stars / 40 Followers: Auto Proxy Scraper
+* 30 Stars / 40 Followers: Auto Proxy Scraper
+* 40 Stars / 45 Followers: Keep Tokens Online with WebSockets
 
 ---------------------------------------
 
