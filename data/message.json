@@ -1,10 +1,10 @@
 {
-    "content" : "Hi Fellow Discord User \nThis is an example message! Use \n to change lines.",
-    "embeds": 
+    "content" : "Hi Fellow Discord User \nThis is an example message! Use \nto change lines.\nYou can use <user> for mentioning the user",
+    "embeds":
         [{
           "type": "rich",
           "title": "This can be a link",
-          "description": "You can have embeds however you like them. As long as you send them in the correct format, they will be sent!",
+          "description": "You can have embeds however you like them. As long as you send them in the correct format, they will be sent!\nYou can mention the user inside the embed too: <user>",
           "color": 3348893,
           "fields": [
             {
@@ -13,7 +13,7 @@
               "inline": true
             },
             {
-              "name": "You can add multiple of these lol",
+              "name": "<username>",
               "value": "You can add images too and set their size\n[click here](https://github.com/hoemotion/Discord-Mass-DM/)"
             }
           ],
