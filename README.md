@@ -32,6 +32,8 @@
 ---------------------------------------
 
 ### Features
+
+* Fast
 * Asynchronous
 * Easy to use
 * Free
@@ -45,10 +47,10 @@
 ### Milestones
 
 * 15 Stars / 25 Followers: Blacklist User (avoid dming them)
-* 20 Stars / 35 Followers: Proxy Support
-* 30 Stars / 40 Followers: Auto Proxy Scraper
-* 40 Stars / 45 Followers: add Random User Agent + superproperties handler (property will be compatible with user agent)
-* 50 Stars / 50 Followers: Keep Tokens Online with WebSockets
+* 20 Stars / 30 Followers: Keep Tokens Online with WebSockets
+* 30 Stars / 35 Followers: Proxy Support
+* 35 Stars / 40 Followers: Auto Proxy Scraper
+* 40 Stars / 45 Followers: add Random User Agent
 
 ---------------------------------------
 
