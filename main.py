@@ -1,16 +1,15 @@
 # don't forget to leave a star <3 https://github.com/hoemotion/Disocrd-Mass-Dm
-import os, sys, time, random, asyncio, json
+import os, sys, time, random, asyncio, json, logging
 from datetime import datetime
 from lib.scraper import Scraper
 try:
-    import psutil, logging
+    import psutil
     from aiohttp import ClientSession
     from tasksio import TaskPool
 except ImportError:
     os.system("pip install aiohttp")
     os.system("pip install tasksio")
     os.system("pip install psutil")
-    os.system("pip install logging")
 
 logging.basicConfig(
     level=logging.INFO,
