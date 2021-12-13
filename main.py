@@ -2,6 +2,7 @@
 import os, sys, time, random, asyncio, json, logging
 from datetime import datetime
 from lib.scraper import Scraper
+
 try:
     import psutil
     from aiohttp import ClientSession
@@ -10,13 +11,16 @@ except ImportError:
     os.system("pip install aiohttp")
     os.system("pip install tasksio")
     os.system("pip install psutil")
-    import websocket, psutil; from tasksio import TaskPool; from aiohttp import ClientSession
+    import websocket, psutil;
+    from tasksio import TaskPool;
+    from aiohttp import ClientSession
 
 logging.basicConfig(
     level=logging.INFO,
     format="\x1b[38;5;9m[\x1b[0m%(asctime)s\x1b[38;5;9m]\x1b[0m %(message)s\x1b[0m",
     datefmt="%H:%M:%S"
 )
+
 
 class Discord(object):
 
@@ -47,25 +51,27 @@ class Discord(object):
             with open("data/tokens.json", "r") as file:
                 tkns = json.load(file)
                 if len(tkns) == 0:
-                  logging.info(f"{self.err} Please insert your tokens {self.opbracket}tokens.json{self.closebrckt}")
-                  sys.exit()
+                    logging.info(f"{self.err} Please insert your tokens {self.opbracket}tokens.json{self.closebrckt}")
+                    sys.exit()
                 for tkn in tkns:
                     self.tokens.append(tkn)
         except Exception:
-          logging.info(f"{self.err} Please insert your tokens {self.opbracket}tokens.json{self.closebrckt}")
-          sys.exit()
+            logging.info(f"{self.err} Please insert your tokens correctly in {self.opbracket}tokens.json{self.closebrckt}")
+            sys.exit()
         try:
             with open("data/blacklisted_user_ids.json", "r") as file:
                 blacklisted_ids = json.load(file)
                 for user_id in blacklisted_ids:
                     self.blacklisted_users.append(user_id)
         except Exception:
-          logging.info(f"{self.err} Please insert the blacklisted User IDs correctly {self.opbracket}blacklisted_user_ids.json{self.closebrckt}")
-          sys.exit()
+            logging.info(
+                f"{self.err} Please insert the blacklisted User IDs correctly {self.opbracket}blacklisted_user_ids.json{self.closebrckt}")
+            sys.exit()
 
-        logging.info(f"{self.g}[+]{self.rst} Successfully loaded {self.red}%s{self.rst} token(s)\n" % (len(self.tokens)))
+        logging.info(
+            f"{self.g}[+]{self.rst} Successfully loaded {self.red}%s{self.rst} token(s)\n" % (len(self.tokens)))
         with open("data/message.json", "r") as file:
-          data = json.load(file)
+            data = json.load(file)
         msg = data['content']
         embds = data['embeds']
         self.invite = input(f"{self.question}Invite{self.arrow}discord.gg/")
@@ -80,7 +86,7 @@ class Discord(object):
             self.ratelimit_delay = float(input(f"{self.question}Rate limit Delay{self.arrow}"))
         except Exception:
             self.ratelimit_delay = 300
-            
+
         print()
 
     def stop(self):
@@ -90,7 +96,7 @@ class Discord(object):
     def nonce(self):
         date = datetime.now()
         unixts = time.mktime(date.timetuple())
-        return str((int(unixts)*1000-1420070400000)*4194304)
+        return str((int(unixts) * 1000 - 1420070400000) * 4194304)
 
     async def headers(self, token):
         async with ClientSession() as client:
@@ -104,7 +110,7 @@ class Discord(object):
             logging.info(f"{self.success} Obtained dcfduid cookie: {dcfduid}")
             logging.info(f"{self.success} Obtained sdcfduid cookie: {sdcfduid}")
             logging.info(f"{self.success} Obtained fingerprint: {fingerprint}")
-        
+
         return {
             "Authorization": token,
             "accept": "*/*",
@@ -130,7 +136,8 @@ class Discord(object):
             async with ClientSession(headers=headers) as mass_dm_brrr:
                 async with mass_dm_brrr.get("https://discord.com/api/v9/users/@me/library") as response:
                     if response.status == 200:
-                        logging.info(f"{self.success}Successfully logged in {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(
+                            f"{self.success}Successfully logged in {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     if response.status == 401:
                         logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
@@ -154,7 +161,8 @@ class Discord(object):
                         self.guild_name = json["guild"]["name"]
                         self.guild_id = json["guild"]["id"]
                         self.channel_id = json["channel"]["id"]
-                        logging.info(f"{self.success}Successfully joined %s {self.opbracket}%s{self.closebrckt}" % (self.guild_name[:20], token[:59]))
+                        logging.info(f"{self.success}Successfully joined %s {self.opbracket}%s{self.closebrckt}" % (
+                        self.guild_name[:20], token[:59]))
                     elif response.status == 401:
                         logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
@@ -177,41 +185,50 @@ class Discord(object):
         try:
             headers = await self.headers(token)
             async with ClientSession(headers=headers) as chupapi_munanyo:
-                async with chupapi_munanyo.post("https://discord.com/api/v9/users/@me/channels", json={"recipients": [user]}) as response:
+                async with chupapi_munanyo.post("https://discord.com/api/v9/users/@me/channels",
+                                                json={"recipients": [user]}) as response:
                     json = await response.json()
                     if response.status == 200:
-                        logging.info(f"{self.success}Successfully created direct message with %s {self.opbracket}%s{self.closebrckt}" % (json["recipients"][0]["username"], token[:59]))
+                        logging.info(
+                            f"{self.success}Successfully created direct message with %s {self.opbracket}%s{self.closebrckt}" % (
+                            json["recipients"][0]["username"], token[:59]))
                         return json["id"]
                     elif response.status == 401:
                         logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                         return False
                     elif response.status == 403:
-                        logging.info(f"{self.err}Can\'t message user {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(
+                            f"{self.err}Can\'t message user {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 429:
                         logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         return await self.create_dm(token, user)
                     elif response.status == 400:
-                        logging.info(f"{self.err}Can\'t create DM with yourself! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(
+                            f"{self.err}Can\'t create DM with yourself! {self.opbracket}%s{self.closebrckt}" % (
+                            token[:59]))
                     elif response.status == 404:
-                        logging.info(f"{self.err}User doesn\'t exist! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(
+                            f"{self.err}User doesn\'t exist! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     else:
                         return False
         except Exception:
             return await self.create_dm(token, user)
-
 
     async def direct_message(self, token: str, channel: str, user):
         embed = self.get_user_in_embed(user)
         message = self.get_user_in_message(user)
         headers = await self.headers(token)
         async with ClientSession(headers=headers) as virgin:
-            async with virgin.post("https://discord.com/api/v9/channels/%s/messages" % (channel), json={"content": message, "embeds": embed, "nonce": self.nonce(),"tts": False}) as response:
+            async with virgin.post("https://discord.com/api/v9/channels/%s/messages" % (channel),
+                                   json={"content": message, "embeds": embed, "nonce": self.nonce(),
+                                         "tts": False}) as response:
                 json = await response.json()
                 if response.status == 200:
-                    logging.info(f"{self.success}Successfully sent message {self.opbracket}%s{self.red}){self.rst}" % (token[:59]))
+                    logging.info(f"{self.success}Successfully sent message {self.opbracket}%s{self.red}){self.rst}" % (
+                    token[:59]))
                 elif response.status == 401:
                     logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     self.tokens.remove(token)
@@ -221,7 +238,8 @@ class Discord(object):
                     time.sleep(self.ratelimit_delay)
                     await self.direct_message(token, channel, user)
                 elif response.status == 403 and json["code"] == 50007:
-                    logging.info(f"{self.err}User has direct messages disabled {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    logging.info(f"{self.err}User has direct messages disabled {self.opbracket}%s{self.closebrckt}" % (
+                    token[:59]))
                 elif response.status == 403 and json["code"] == 40002:
                     logging.info(f"{self.err}Locked {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     self.tokens.remove(token)
@@ -260,16 +278,23 @@ class Discord(object):
         try:
             headers = await self.headers(token)
             async with ClientSession(headers=headers) as client:
-                async with client.delete(f"https://discord.com/api/v9/users/@me/guilds/{self.guild_id}", json={"lurking": False}) as response:
+                async with client.delete(f"https://discord.com/api/v9/users/@me/guilds/{self.guild_id}",
+                                         json={"lurking": False}) as response:
                     json = await response.json()
                     message = json["message"]
                     code = json["code"]
                     if response.status == 200:
-                        logging.info(f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(
+                            f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (
+                            token[:59]))
                     elif response.status == 204:
-                        logging.info(f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(
+                            f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (
+                            token[:59]))
                     elif response.status == 404:
-                        logging.info(f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(
+                            f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (
+                            token[:59]))
                     elif response.status == 403:
                         logging.info(f"{self.err}{message} | {code} {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     elif response.status == 401:
@@ -279,7 +304,9 @@ class Discord(object):
                         time.sleep(self.ratelimit_delay)
                         await self.leave(token)
                     else:
-                        logging.info(f"{self.err}{response.status} | {message} | {code} | {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(
+                            f"{self.err}{response.status} | {message} | {code} | {self.opbracket}%s{self.closebrckt}" % (
+                            token[:59]))
 
 
         except Exception:
@@ -296,7 +323,7 @@ class Discord(object):
                     await pool.put(self.login(token))
                 else:
                     self.stop()
-                    
+
         if len(self.tokens) == 0: self.stop()
 
         print()
@@ -310,7 +337,7 @@ class Discord(object):
                     if self.delay != 0: await asyncio.sleep(self.delay)
                 else:
                     self.stop()
-        
+
         if len(self.tokens) == 0: self.stop()
 
         scraper = Scraper(
@@ -355,6 +382,7 @@ class Discord(object):
         else:
             logging.info("All Tasks are done")
             self.stop()
+
 
 if __name__ == "__main__":
     client = Discord()
