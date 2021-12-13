@@ -10,6 +10,7 @@ except ImportError:
     os.system("pip install aiohttp")
     os.system("pip install tasksio")
     os.system("pip install psutil")
+    import websocket, psutil; from tasksio import TaskPool; from aiohttp import ClientSession
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,6 +28,7 @@ class Discord(object):
 
         self.clear()
         self.tokens = []
+        self.blacklisted_users = []
 
         self.guild_name = None
         self.guild_id = None
@@ -52,6 +54,14 @@ class Discord(object):
         except Exception:
           logging.info(f"{self.err} Please insert your tokens {self.opbracket}tokens.json{self.closebrckt}")
           sys.exit()
+        try:
+            with open("data/blacklisted_user_ids.json", "r") as file:
+                blacklisted_ids = json.load(file)
+                for user_id in blacklisted_ids:
+                    self.blacklisted_users.append(user_id)
+        except Exception:
+          logging.info(f"{self.err} Please insert the blacklisted User IDs correctly {self.opbracket}blacklisted_user_ids.json{self.closebrckt}")
+          sys.exit()
 
         logging.info(f"{self.g}[+]{self.rst} Successfully loaded {self.red}%s{self.rst} token(s)\n" % (len(self.tokens)))
         with open("data/message.json", "r") as file:
@@ -67,7 +77,7 @@ class Discord(object):
         except Exception:
             self.delay = 0
         try:
-            self.ratelimit_delay = float(input(f"{self.question}Ratelimit Delay{self.arrow}"))
+            self.ratelimit_delay = float(input(f"{self.question}Rate limit Delay{self.arrow}"))
         except Exception:
             self.ratelimit_delay = 300
             
@@ -88,6 +98,12 @@ class Discord(object):
                 cookies = str(response.cookies)
                 dcfduid = cookies.split("dcfduid=")[1].split(";")[0]
                 sdcfduid = cookies.split("sdcfduid=")[1].split(";")[0]
+            async with client.get("https://discordapp.com/api/v9/experiments") as finger:
+                json = await finger.json()
+                fingerprint = json["fingerprint"]
+                logging.info(f"{self.success} Obtained dcfduid cookie: {dcfduid}")
+                logging.info(f"{self.success} Obtained sdcfduid cookie: {sdcfduid}")
+                logging.info(f"{self.success} Obtained fingerprint: {fingerprint}")
         
         return {
             "Authorization": token,
@@ -104,6 +120,7 @@ class Discord(object):
             "TE": "Trailers",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9001 Chrome/83.0.4103.122 Electron/9.3.5 Safari/537.36",
             "x-debug-options": "bugReporterEnabled",
+            "x-fingerprint": fingerprint,
             "X-Super-Properties": "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRGlzY29yZCBDbGllbnQiLCJyZWxlYXNlX2NoYW5uZWwiOiJzdGFibGUiLCJjbGllbnRfdmVyc2lvbiI6IjEuMC45MDAxIiwib3NfdmVyc2lvbiI6IjEwLjAuMTkwNDIiLCJvc19hcmNoIjoieDY0Iiwic3lzdGVtX2xvY2FsZSI6ImVuLVVTIiwiY2xpZW50X2J1aWxkX251bWJlciI6ODMwNDAsImNsaWVudF9ldmVudF9zb3VyY2UiOm51bGx9"
         }
 
@@ -121,7 +138,7 @@ class Discord(object):
                         logging.info(f"{self.err}Locked account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     if response.status == 429:
-                        logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.login(token)
         except Exception:
@@ -145,7 +162,7 @@ class Discord(object):
                         logging.info(f"{self.err}Locked account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 429:
-                        logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.join(token)
                     elif response.status == 404:
@@ -173,7 +190,7 @@ class Discord(object):
                         logging.info(f"{self.err}Can\'t message user {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     elif response.status == 429:
-                        logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         return await self.create_dm(token, user)
                     elif response.status == 400:
@@ -313,8 +330,11 @@ class Discord(object):
         async with TaskPool(1_000) as pool:
             for user in self.users:
                 if len(self.tokens) != 0:
-                    await pool.put(self.send(random.choice(self.tokens), user))
-                    if self.delay != 0: await asyncio.sleep(self.delay)
+                    if user not in self.blacklisted_users:
+                        await pool.put(self.send(random.choice(self.tokens), user))
+                        if self.delay != 0: await asyncio.sleep(self.delay)
+                    else:
+                        logging.info(f"{self.err}Blacklisted User: {self.red}%s{self.rst}" % (user))
                 else:
                     self.stop()
 
