@@ -14,7 +14,7 @@
   <a href="https://discord.com/invite/verQuxaBqy">
     <img src="https://img.shields.io/static/v1?label=Discord&message=Click%20here&color=7289DA&style=for-the-badge&logo=discord" alt="Discord-Server" width="200">
   </a>
-  <a href="https://discord.com/invite/verQuxaBqy">
+  <a href="https://guilded.gg/hoemotion">
     <img src="https://img.shields.io/static/v1?label=Guilded&message=Click%20here&color=DBAB08&style=for-the-badge&logo=guilded" alt="Discord-Server" width="200">
   </a>
   <br>
