@@ -1,4 +1,3 @@
-# don't forget to leave a star <3 https://github.com/hoemotion/Disocrd-Mass-Dm
 import os, sys, time, random, asyncio, json, logging
 from datetime import datetime
 from lib.scraper import Scraper
@@ -68,7 +67,7 @@ class Discord(object):
           data = json.load(file)
         msg = data['content']
         embds = data['embeds']
-        self.invite = input(f"{self.question}Invite{self.arrow}")
+        self.invite = input(f"{self.question}Invite{self.arrow}discord.gg/")
         self.leaving = input(f"{self.question}Leave Server after Mass DM? (y/n){self.arrow}")
         self.message = msg
         self.embed = embds
