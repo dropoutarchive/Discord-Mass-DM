@@ -50,11 +50,11 @@
 
 ### Milestones
 
-* 15 Stars and 25 Followers: Blacklist User (avoid dming them)
-* 20 Stars and 30 Followers: Keep Tokens Online with WebSockets
-* 30 Stars and 35 Followers: Proxy Support
-* 35 Stars and 40 Followers: Auto Proxy Scraper
-* 40 Stars and 45 Followers: add Random User Agent
+* 15 Stars / 25 Followers: Blacklist User (coming soon)
+* 20 Stars / 30 Followers: Keep Tokens Online with WebSockets (coming soon)
+* 30 Stars / 35 Followers: Proxy Support
+* 35 Stars / 40 Followers: Auto Proxy Scraper
+* 40 Stars / 45 Followers: add Random User Agent
 
 ---------------------------------------
 
