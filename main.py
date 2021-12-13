@@ -107,9 +107,9 @@ class Discord(object):
             async with client.get("https://discordapp.com/api/v9/experiments") as finger:
                 json = await finger.json()
                 fingerprint = json["fingerprint"]
-            logging.info(f"{self.success} Obtained dcfduid cookie: {dcfduid}")
-            logging.info(f"{self.success} Obtained sdcfduid cookie: {sdcfduid}")
-            logging.info(f"{self.success} Obtained fingerprint: {fingerprint}")
+            logging.info(f"{self.success}Obtained dcfduid cookie: {dcfduid}")
+            logging.info(f"{self.success}Obtained sdcfduid cookie: {sdcfduid}")
+            logging.info(f"{self.success}Obtained fingerprint: {fingerprint}")
 
         return {
             "Authorization": token,
