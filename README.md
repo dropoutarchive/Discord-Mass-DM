@@ -14,6 +14,9 @@
   <a href="https://discord.com/invite/verQuxaBqy">
     <img src="https://img.shields.io/static/v1?label=Discord&message=Click%20here&color=7289DA&style=for-the-badge&logo=discord" alt="Discord-Server" width="200">
   </a>
+  <a href="https://discord.com/invite/verQuxaBqy">
+    <img src="https://img.shields.io/static/v1?label=Guilded&message=Click%20here&color=DBAB08&style=for-the-badge&logo=guilded" alt="Discord-Server" width="200">
+  </a>
   <br>
   <a href="https://github.com/hoemotion/Discord-Mass-DM">
     <img src="https://i.imgur.com/9l4pHEN.png" alt="Logo" width="120" height="120">
@@ -59,6 +62,6 @@
 ---------------------------------------
 
 ### Contact
-Join the [support server](https://discord.com/invite/verQuxaBqy)
+Join the [support server (Guilded)](https://guilded.gg/hoemotion)
 
 View dropout's contact information on his [website](https://dropout.black/)
