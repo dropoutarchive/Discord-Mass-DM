@@ -64,6 +64,9 @@
 
 ### Contact
 
-Join the [support server (Guilded)](https://guilded.gg/hoemotion)
+<p align="left">
+<a href = "https://discord.gg/verQuxaBqy"><img src="https://img.icons8.com/color/48/000000/discord.png"/></a>
+<a href = "https://guilded.gg/hoemotion"><img src="https://img.icons8.com/fluency/48/000000/guilded.png"/></a>
+</p>
 
 View dropout's contact information on his [website](https://dropout.black/)
