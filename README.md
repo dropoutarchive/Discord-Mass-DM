@@ -63,6 +63,7 @@
 ---------------------------------------
 
 ### Contact
+
 Join the [support server (Guilded)](https://guilded.gg/hoemotion)
 
 View dropout's contact information on his [website](https://dropout.black/)
