@@ -55,7 +55,7 @@
 
 * 15 Stars / 20 Followers: Blacklist User (done)
 * 20 Stars / 25 Followers: Keep Tokens Online with WebSocket (done)
-* 25 Stars / 30 Followers: Automatically avoid DMing Bots
+* 25 Stars / 30 Followers: Automatically avoid DMing Bots (soon)
 * 30 Stars / 35 Followers: Proxy Support
 * 35 Stars / 40 Followers: Auto Proxy Scraper
 * 40 Stars / 45 Followers: add Random User Agent
