@@ -192,4 +192,3 @@ class WebSocket(object):
 if __name__ == "__main__":
     client = WebSocket()
     asyncio.get_event_loop().run_until_complete(client.start())
-    #asyncio.get_event_loop().run_forever()
