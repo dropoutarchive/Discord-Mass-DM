@@ -1,6 +1,6 @@
 import json
 
-#this tool will format your tokens from a tokens.txt file to a tokens.json file
+# this script will format your tokens from a tokens.txt file to a tokens.json file
 
 with open("tokens.json", "r") as file:
   data = json.load(file)
