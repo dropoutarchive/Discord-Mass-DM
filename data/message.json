@@ -1,0 +1,33 @@
+{
+    "content" : "Hi Fellow Discord User \nThis is an example message! Use \nto change lines.\nYou can use <user> for mentioning the user",
+    "embeds":
+        [{
+          "type": "rich",
+          "title": "This can be a link",
+          "description": "You can have embeds however you like them. As long as you send them in the correct format, they will be sent!\nYou can mention the user inside the embed too: <user>",
+          "color": 3348893,
+          "fields": [
+            {
+              "name": "<-- You can add any colour but be sure it's in decimal",
+              "value": "This is an embed field, you can add this too. You can delete anything from here to not have it show up.",
+              "inline": true
+            },
+            {
+              "name": "<username>",
+              "value": "You can add images too and set their size\n[click here](https://github.com/hoemotion/Discord-Mass-DM/)"
+            }
+          ],
+          "image": {
+            "url": "https://i.imgur.com/RCBBege.png",
+            "height": 0,
+            "width": 0
+          },
+          "author": {
+            "name": "Use this website to make your Embed easily. ",
+            "url": "https://autocode.com/tools/discord/embed-builder/",
+            "icon_url": "https://i.imgur.com/RCBBege.png"
+          },
+          "url": "https://github.com/hoemotion"
+        }]
+      
+}
