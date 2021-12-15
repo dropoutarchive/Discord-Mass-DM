@@ -48,18 +48,20 @@
 * Multiline message and embed support
 * Server Joiner and Leaver
 * Multiple Tokens
+* Blacklist User
+* Keep Tokens Online with WebSocket
+* Avoid DMing Bots
 
 ---------------------------------------
 
 ### Milestones
 
-* 15 Stars / 20 Followers: Blacklist User **(done)**
-* 20 Stars / 25 Followers: Keep Tokens Online with WebSocket **(done)**
-* 25 Stars / 30 Followers: Automatically avoid DMing Bots **(done)**
-* 30 Stars / 35 Followers: Blacklist Roles
-* 35 Stars / 40 Followers: Proxy Support
-* 40 Stars / 45 Followers: Auto Proxy Scraper
-* 45 Stars / 50 Followers: add Random User Agent
+* 15 Stars / 5 Followers: Blacklist Roles
+* 20 Stars / 10 Followers: add Random User Agent
+* 25 Stars / 15 Followers: Proxy Support
+* 30 Stars / 20 Followers: Proxy Scrape
+* 40 Stars / 25 Followers: Auto React to Role
+* 50 Stars / 30 Followers: Auto Accept Server Rules (the built-in ones)
 
 ---------------------------------------
 
