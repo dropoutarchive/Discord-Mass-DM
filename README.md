@@ -18,7 +18,7 @@
     <img src="https://img.shields.io/static/v1?label=Guilded&message=Click%20here&color=DBAB08&style=for-the-badge&logo=guilded" alt="Discord-Server" width="200">
   </a>
   <br>
-  <a href="https://github.com/hoemotion/Discord-Mass-DM">
+  <a href="https://github.com//ahegah0e/Discord-Mass-DM">
     <img src="https://i.imgur.com/9l4pHEN.png" alt="Logo" width="120" height="120">
   </a>
   
