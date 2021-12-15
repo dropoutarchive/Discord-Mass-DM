@@ -1,10 +1,10 @@
 <div id="top"></div>
 <p align="center">
-  <img src="https://img.shields.io/github/contributors/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/forks/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/stars/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/issues/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/license/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/contributors/ahegah0e/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/forks/ahegah0e/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/stars/ahegah0e/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/issues/ahegah0e/Discord-Mass-DM.svg?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/license/ahegah0e/Discord-Mass-DM.svg?style=for-the-badge"/>
 </p>
   
 ---------------------------------------
