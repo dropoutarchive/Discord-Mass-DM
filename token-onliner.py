@@ -1,4 +1,4 @@
-#this script will keep all your tokens online using a websocket connection which means that its only an optional feature
+# this script will keep all your tokens online using a websocket connection which means that its only an optional feature
 # credits: https://github.com/Its-Vichy/discord-status-insult-changer <3
 import logging, sys, time, asyncio, threading, os, random, json; from datetime import datetime; from random import randint
 try:
@@ -19,6 +19,7 @@ arrow = " \x1b[38;5;9m->\x1b[0m "
 heartbeat = f"{red}<3{rst}beat"
 
 def init_websocket(token: str):
+    status = ["online", "idle", "dnd"]
     ws = websocket.WebSocket()
     ws.connect(url= 'wss://gateway.discord.gg/?encoding=json&v=9&compress=zlib-stream')
     ws.send(json.dumps({"op" :2 ,"d" :{"token": token ,"capabilities" :125
@@ -30,7 +31,7 @@ def init_websocket(token: str):
                                                       ,"referring_domain" :"discord.com" ,"referrer_current" :""
                                                       ,"referring_domain_current" :"" ,"release_channel" :"stable"
                                                       ,"client_build_number" :107767 ,"client_event_source" :None}
-                                       ,"presence" :{"status" :"online" ,"since" :0 ,"activities" :[] ,"afk" :False}
+                                       ,"presence" :{"status" :random.choice(status) ,"since" :0 ,"activities" :[] ,"afk" :False}
                                        ,"compress" :False
                                        ,"client_state" :{"guild_hashes" :{} ,"highest_last_message_id" :"0"
                                                         ,"read_state_version" :0 ,"user_guild_settings_version" :-1
@@ -41,7 +42,7 @@ def init_websocket(token: str):
 
 def status_changer(ws: websocket.WebSocket):
     status = ["online", "idle", "dnd"]
-    quotes = ["github.com/ahegah0e", "guilded.gg/hoemotion", "discord.com/terms", "<3", "github.com/ahegah0e", "guilded.gg/hoemotion", "github.com/hoemotion"]
+    quotes = ["github.com/ahegah0e", "guilded.gg/hoemotion", "discord.com/terms", "<3", "github.com/ahegah0e", "guilded.gg/hoemotion", "github.com/ahegah0e"]
     while True:
 
         ws.send(json.dumps({"op" :3 ,"d" :{"status" : random.choice(status) ,"since" :0 ,"activities" :
