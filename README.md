@@ -56,7 +56,7 @@
 
 ### Milestones
 
-* 30 Stars / 35 Followers: Blacklist Roles
+* 30 Stars / 35 Followers: Blacklist Roles *(soon)*
 * 35 Stars / 40 Followers: Proxy Support
 * 40 Stars / 45 Followers: Auto Proxy Scraper
 * 45 Stars / 50 Followers: add Random User Agent
