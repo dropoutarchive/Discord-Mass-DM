@@ -1,17 +1,12 @@
-#this script will keep all your tokens online using a websocket connection which means that its only an optional feature
-#made with <3 by https://github.com/hoemotion
+# this script will keep all your tokens online using a websocket connection which means that its only an optional feature
+# credits: https://github.com/Its-Vichy/discord-status-insult-changer <3
 import logging, sys, time, asyncio, threading, os, random, json; from datetime import datetime; from random import randint
 try:
     import websocket
 except ImportError:
     os.system("pip install websocket-client")
     import websocket
-# credits: https://github.com/Its-Vichy/discord-status-insult-changer <3
-logging.basicConfig(
-    level=logging.INFO,
-    format="\x1b[38;5;9m[\x1b[0m%(asctime)s\x1b[38;5;9m]\x1b[0m %(message)s\x1b[0m",
-    datefmt="%H:%M:%S"
-)
+logging.basicConfig(level=logging.INFO, format="\x1b[38;5;9m[\x1b[0m%(asctime)s\x1b[38;5;9m]\x1b[0m %(message)s\x1b[0m", datefmt="%H:%M:%S")
 g = "\033[92m"
 red = "\x1b[38;5;9m"
 rst = "\x1b[0m"
@@ -24,6 +19,7 @@ arrow = " \x1b[38;5;9m->\x1b[0m "
 heartbeat = f"{red}<3{rst}beat"
 
 def init_websocket(token: str):
+    status = ["online", "idle", "dnd"]
     ws = websocket.WebSocket()
     ws.connect(url= 'wss://gateway.discord.gg/?encoding=json&v=9&compress=zlib-stream')
     ws.send(json.dumps({"op" :2 ,"d" :{"token": token ,"capabilities" :125
@@ -35,7 +31,7 @@ def init_websocket(token: str):
                                                       ,"referring_domain" :"discord.com" ,"referrer_current" :""
                                                       ,"referring_domain_current" :"" ,"release_channel" :"stable"
                                                       ,"client_build_number" :107767 ,"client_event_source" :None}
-                                       ,"presence" :{"status" :"online" ,"since" :0 ,"activities" :[] ,"afk" :False}
+                                       ,"presence" :{"status" :random.choice(status) ,"since" :0 ,"activities" :[] ,"afk" :False}
                                        ,"compress" :False
                                        ,"client_state" :{"guild_hashes" :{} ,"highest_last_message_id" :"0"
                                                         ,"read_state_version" :0 ,"user_guild_settings_version" :-1
@@ -71,4 +67,7 @@ except Exception as e:
         sys.exit()
 
 for token in tokens_list:
-    threading.Thread(target=status_changer, args=(init_websocket(token),)).start()
+    try:
+        threading.Thread(target=status_changer, args=(init_websocket(token),)).start()
+    except:
+        pass
