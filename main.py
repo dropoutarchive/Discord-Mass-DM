@@ -131,7 +131,7 @@ class Discord(object):
                     try:
                         json = await response.json()
                         jsoncode = json["code"]
-                        code = f"{self.opbracket}{code}{self.closebrckt} | "
+                        code = f"{self.opbracket}{jsoncode}{self.closebrckt} | "
                     except:
                         code = ""
                     if response.status == 200:
