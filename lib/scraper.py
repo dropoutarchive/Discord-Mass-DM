@@ -34,7 +34,7 @@ class Scraper(object):
 
             for user in client.gateway.session.guild(self.guild_id).members:
                 if not client.gateway.session.guild(self.guild_id).members[user].get("bot"):
-                    self.scraped.append(user)
+                    self.scraped.append(int(user))
 
             client.gateway.close()
         except Exception:
