@@ -1,19 +1,12 @@
-# don't forget to leave a star <3 https://github.com/hoemotion/Disocrd-Mass-Dm
-import os, sys, time, random, asyncio, json, logging
-from datetime import datetime
-from lib.scraper import Scraper
-
+# don't forget to leave a star <3 https://github.com/ahegah0e/Disocrd-Mass-Dm
+import os, sys, time, random, asyncio, json, logging; from datetime import datetime; from lib.scraper import Scraper
 try:
-    import psutil
-    from aiohttp import ClientSession
-    from tasksio import TaskPool
+    import psutil; from aiohttp import ClientSession; from tasksio import TaskPool
 except ImportError:
     os.system("pip install aiohttp")
     os.system("pip install tasksio")
     os.system("pip install psutil")
-    import websocket, psutil;
-    from tasksio import TaskPool;
-    from aiohttp import ClientSession
+    import websocket, psutil; from tasksio import TaskPool; from aiohttp import ClientSession
 
 logging.basicConfig(
     level=logging.INFO,
@@ -249,7 +242,8 @@ class Discord(object):
                     time.sleep(self.ratelimit_delay)
                     await self.direct_message(token, channel, user)
                 elif response.status == 400:
-                    logging.info(f"{self.err}Can\'t DM yourself! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    code = json["code"]
+                    logging.info(f"{self.err}Can\'t DM this User! {self.opbracket}{code}{self.closebrckt} | {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                 elif response.status == 404:
                     logging.info(f"{self.err}User doesn\'t exist! {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                 else:
