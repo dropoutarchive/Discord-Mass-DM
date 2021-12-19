@@ -1,4 +1,4 @@
-# don't forget to leave a star <3 https://github.com/ahegah0e/Disocrd-Mass-Dm
+# don't forget to leave a star <3 https://github.com/hoemotion/Disocrd-Mass-Dm
 import os, sys, time, random, asyncio, json, logging; from datetime import datetime; from lib.scraper import Scraper
 try:
     import psutil; from aiohttp import ClientSession; from tasksio import TaskPool
