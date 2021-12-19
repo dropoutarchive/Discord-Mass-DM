@@ -128,17 +128,19 @@ class Discord(object):
             headers = await self.headers(token)
             async with ClientSession(headers=headers) as mass_dm_brrr:
                 async with mass_dm_brrr.get("https://discord.com/api/v9/users/@me/library") as response:
+                    json = await response.json()
+                    code = json["code"]
                     if response.status == 200:
                         logging.info(
                             f"{self.success}Successfully logged in {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     if response.status == 401:
-                        logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(f"{self.err}Invalid account {self.opbracket}{code}{self.closebrckt} | {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     if response.status == 403:
-                        logging.info(f"{self.err}Locked account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(f"{self.err}Locked account {self.opbracket}{code}{self.closebrckt} | {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
                     if response.status == 429:
-                        logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        logging.info(f"{self.err}Rate limited {self.opbracket}{code}{self.closebrckt} | {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.login(token)
         except Exception:
