@@ -6,7 +6,7 @@ except ImportError:
     os.system("pip install aiohttp")
     os.system("pip install tasksio")
     os.system("pip install psutil")
-    import websocket, psutil; from tasksio import TaskPool; from aiohttp import ClientSession
+    import psutil; from tasksio import TaskPool; from aiohttp import ClientSession
 
 logging.basicConfig(
     level=logging.INFO,
