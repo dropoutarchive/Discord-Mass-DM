@@ -71,3 +71,4 @@
 </p>
 
 View dropout's contact information on his [website](https://dropout.black/)
+View my contact information on my [website](https://hoemotion.github.io/)
