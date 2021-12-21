@@ -55,7 +55,7 @@ class Discord(object):
             with open("data/blacklisted_user_ids.json", "r") as file:
                 blacklisted_ids = json.load(file)
                 for user_id in blacklisted_ids:
-                    self.blacklisted_users.append(user_id)
+                    self.blacklisted_users.append(str(user_id))
         except Exception:
             logging.info(
                 f"{self.err} Please insert the blacklisted User IDs correctly {self.opbracket}blacklisted_user_ids.json{self.closebrckt}")
@@ -357,7 +357,7 @@ class Discord(object):
         async with TaskPool(1_000) as pool:
             for user in self.users:
                 if len(self.tokens) != 0:
-                    if user not in self.blacklisted_users:
+                    if str(user) not in self.blacklisted_users:
                         await pool.put(self.send(random.choice(self.tokens), user))
                         if self.delay != 0: await asyncio.sleep(self.delay)
                     else:
