@@ -70,5 +70,6 @@
 <a href = "https://guilded.gg/hoemotion"><img src="https://img.icons8.com/fluency/48/000000/guilded.png"/></a>
 </p>
 
-View dropout's contact information on his [website](https://dropout.black/)
-View my contact information on my [website](https://hoemotion.github.io/)
+<p>View dropout's contact information on his <a href = "https://dropout.black/">website</a><br>
+View my contact information on my <a href = "https://hoemotion.github.io/">website</a>
+</p>
