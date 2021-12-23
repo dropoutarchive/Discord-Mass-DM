@@ -54,12 +54,12 @@
 * Avoid DMing Bots
 * Keep Tokens Online [OPTIONAL]
 * Blacklist Roles (Won't dm users with that role.. perfect for blacklisting admins etc.)
+* Proxy Support
 
 ---------------------------------------
 
 ### Milestones
 
-* 35 Stars / 40 Followers: Proxy Support *(soon)*
 * 40 Stars / 45 Followers: Auto Proxy Scraper *(soon)*
 * 45 Stars / 50 Followers: add Random User Agent
 
