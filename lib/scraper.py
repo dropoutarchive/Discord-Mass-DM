@@ -1,10 +1,11 @@
 import os, logging, json, time
+
 try:
     import discum
 except ImportError:
     os.system("pip install discum")
     os.system("python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M#egg=discum")
-    
+
 logging.basicConfig(
     level=logging.INFO,
     format="\x1b[38;5;9m[\x1b[0m%(asctime)s\x1b[38;5;9m]\x1b[0m %(message)s\x1b[0m",
@@ -51,8 +52,6 @@ class Scraper(object):
 
             client.gateway.run()
 
-
-
             for user, info in dict(client.gateway.session.guild(self.guild_id).members).items():
                 if not set(self.blacklisted_roles).isdisjoint(info['roles']):
                     username = str(client.gateway.session.guild(self.guild_id).members[user].get('username'))
@@ -60,14 +59,13 @@ class Scraper(object):
                     del client.gateway.session.guild(self.guild_id).members[user]
                 else:
                     if not client.gateway.session.guild(self.guild_id).members[user].get("bot"):
-                        self.scraped.append(str(user))
-
-
+                        if str(user) not in self.scraped:
+                            self.scraped.append(str(user))
 
             client.gateway.close()
         except Exception:
             return
-    
+
     def fetch(self):
         try:
             self.scrape()
