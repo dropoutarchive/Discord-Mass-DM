@@ -54,7 +54,7 @@
 * Avoid DMing Bots
 * Keep Tokens Online [OPTIONAL]
 * Blacklist Roles (Won't dm users with that role.. perfect for blacklisting admins etc.)
-* Proxy Support (socks4/http/https, you have to choose one type multiple proxy types aren't supported)
+* Proxy Support (socks4/socks5/http/https, you have to choose one type multiple proxy types aren't supported)
 
 ---------------------------------------
 
