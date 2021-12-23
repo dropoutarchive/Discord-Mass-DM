@@ -60,7 +60,7 @@
 ### Milestones
 
 * 35 Stars / 40 Followers: Proxy Support *(soon)*
-* 40 Stars / 45 Followers: Auto Proxy Scraper
+* 40 Stars / 45 Followers: Auto Proxy Scraper *(soon)*
 * 45 Stars / 50 Followers: add Random User Agent
 
 ---------------------------------------
