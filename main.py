@@ -74,7 +74,7 @@ class Discord(object):
         self.mode = input(f"{self.question}Use Proxies? {self.opbracket}y/n{self.closebrckt}{self.arrow}")
         if self.mode.lower() == "y":
             self.use_proxies = True
-            self.proxy_type = input(f"{self.question}Proxy type {self.opbracket}http/https/socks4{self.closebrckt}{self.arrow}")
+            self.proxy_type = input(f"{self.question}Proxy type {self.opbracket}http/https/socks4/socks5{self.closebrckt}{self.arrow}")
         else:
             self.use_proxies = False
 
