@@ -60,8 +60,13 @@
 
 ### Milestones
 
-* 40 Stars / 45 Followers: Auto Proxy Scraper *(soon)*
-* 45 Stars / 50 Followers: add Random User Agent
+* 40 Stars: Auto Proxy Scraper *(soon)*
+* 50 Stars: add Random User Agent (Superproperties will change too)
+* 60 Stars: add Typing
+* 70 Stars: uploading Files
+* 80 Stars: Fake Phone call
+* 100 Stars: Multithreading with good rate limit handling (each token and proxy)
+* 150 Stars: Make a new Mass Dm repo (using selenium, almost 300 dms each email verified account)
 
 ---------------------------------------
 
