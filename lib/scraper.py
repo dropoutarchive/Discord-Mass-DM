@@ -21,7 +21,7 @@ class Scraper(object):
 
         self.scraped = []
         self.blacklisted_roles = []
-        with open("./blacklisted_role_ids.json") as f:
+        with open("./lib/blacklisted_role_ids.json") as f:
             blacklisted = json.load(f)
         for i in blacklisted:
             self.blacklisted_roles.append(str(i))
