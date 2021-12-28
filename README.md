@@ -55,12 +55,11 @@
 * Keep Tokens Online [OPTIONAL]
 * Blacklist Roles (Won't dm users with that role.. perfect for blacklisting admins etc.)
 * Proxy Support (socks4/socks5/http/https, you have to choose one type multiple proxy types aren't supported)
-
+* [Proxy Scraper + Checker](https://github.com/hoemotion/proxy-scraper-checker) (hardcore skidded, don't blame me)
 ---------------------------------------
 
 ### Milestones
 
-* 40 Stars: Auto Proxy Scraper *(soon)*
 * 50 Stars: add Random User Agent (Superproperties will change too)
 * 60 Stars: add Typing
 * 70 Stars: add Buttons to the message
