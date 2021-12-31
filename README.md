@@ -61,7 +61,7 @@
 ### Milestones
 
 * 50 Stars: add Random User Agent (Superproperties will change too) *almost done*
-* 55 Stars: add a config.json so disabling embeds etc. becomes easier lol
+* 55 Stars: add a config.json so disabling embeds etc. becomes easier lol (I will also make a useful wiki with examples)
 * 60 Stars: add Typing
 * 70 Stars: add Buttons to the message
 * 80 Stars: uploading Files
