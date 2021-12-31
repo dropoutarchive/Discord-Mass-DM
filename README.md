@@ -61,11 +61,12 @@
 ### Milestones
 
 * 50 Stars: add Random User Agent (Superproperties will change too) *almost done*
+* 55 Stars: add a config.json so disabling embeds etc. becomes easier lol
 * 60 Stars: add Typing
 * 70 Stars: add Buttons to the message
 * 80 Stars: uploading Files
 * 90 Stars: Fake Phone call
-* 100 Stars: Multithreading with good rate limit handling (each token and proxy)
+* 100 Stars: idk, maybe sending a friend request?
 * 150 Stars: Make a new Mass Dm repo (using selenium, almost 300 dms each email verified account)
 
 ---------------------------------------
