@@ -60,7 +60,7 @@
 
 ### Milestones
 
-* 50 Stars: add Random User Agent (Superproperties will change too)
+* 50 Stars: add Random User Agent (Superproperties will change too) *almost done*
 * 60 Stars: add Typing
 * 70 Stars: add Buttons to the message
 * 80 Stars: uploading Files
