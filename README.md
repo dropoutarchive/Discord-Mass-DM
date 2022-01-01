@@ -64,7 +64,7 @@
 
 ### Milestones
 
-* 55 Stars: add a config.json so disabling embeds etc. becomes easier lol (I will also make a useful wiki with examples) *soon*
+* 55 Stars: add a config.json so disabling embeds etc. becomes easier lol
 * 65 Stars: add Buttons to the message
 * 75 Stars: Fake Phone call (it will only ring, no voice)
 * 90 Stars: uploading Files
