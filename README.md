@@ -63,10 +63,9 @@
 ### Milestones
 
 * 55 Stars: add a config.json so disabling embeds etc. becomes easier lol (I will also make a useful wiki with examples) *soon*
-* 60 Stars: add Typing
-* 70 Stars: add Buttons to the message
-* 80 Stars: uploading Files
-* 90 Stars: Fake Phone call
+* 65 Stars: add Buttons to the message
+* 75 Stars: Fake Phone call (it will only ring, no voice)
+* 90 Stars: uploading Files
 * 100 Stars: idk, maybe sending a friend request?
 * 150 Stars: Make a new Mass Dm repo (using selenium, almost 300 dms each email verified account)
 
