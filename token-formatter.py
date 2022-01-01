@@ -1,3 +1,4 @@
+# note: this script can also format email:pass:token and stuff like that but the accuracy is only like 99.999% ;)
 import json, time, os
 start = time.time()
 with open ("data/tokens.json") as f:
@@ -5,8 +6,6 @@ with open ("data/tokens.json") as f:
 with open('data/tokens.txt') as f:
     all_infos = [i.strip() for i in f]
 f.close()
-
-
 
 total_tokens = 0
 
