@@ -56,12 +56,13 @@
 * Blacklist Roles (Won't dm users with that role.. perfect for blacklisting admins etc.)
 * Proxy Support (socks4/socks5/http/https, you have to choose one type multiple proxy types aren't supported)
 * [Proxy Scraper + Checker](https://github.com/hoemotion/proxy-scraper-checker) (hardcore skidded, don't blame me)
+* Random User-Agent with matching Superproperty
+
 ---------------------------------------
 
 ### Milestones
 
-* 50 Stars: add Random User Agent (Superproperties will change too) *almost done*
-* 55 Stars: add a config.json so disabling embeds etc. becomes easier lol (I will also make a useful wiki with examples)
+* 55 Stars: add a config.json so disabling embeds etc. becomes easier lol (I will also make a useful wiki with examples) *soon*
 * 60 Stars: add Typing
 * 70 Stars: add Buttons to the message
 * 80 Stars: uploading Files
