@@ -1,5 +1,5 @@
 # don't forget to leave a star <3 https://github.com/hoemotion/Disocrd-Mass-Dm
-import os, sys, time, random, asyncio, json, logging; from datetime import datetime
+import os, sys, time, random, asyncio, json, logging, base64; from datetime import datetime
 from lib.scraper import Scraper
 try:
     import psutil; from aiohttp import ClientSession; from tasksio import TaskPool
@@ -37,9 +37,13 @@ class Discord(object):
         self.success = f"{self.g}[+]{self.rst} "
         self.err = f"{self.red}[{self.rst}!{self.red}]{self.rst} "
         self.opbracket = f"{self.red}({self.rst}"
+        self.opbracket2 = f"{self.g}[{self.rst}"
         self.closebrckt = f"{self.red}){self.rst}"
+        self.closebrckt2 = f"{self.g}]{self.rst}"
         self.question = "\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m "
         self.arrow = " \x1b[38;5;9m->\x1b[0m "
+        with open("data/useragents.txt", encoding="utf-8") as f:
+            self.useragents = [i.strip() for i in f]
 
         try:
             with open("data/tokens.json", "r") as file:
@@ -75,7 +79,16 @@ class Discord(object):
         self.mode = input(f"{self.question}Use Proxies? {self.opbracket}y/n{self.closebrckt}{self.arrow}")
         if self.mode.lower() == "y":
             self.use_proxies = True
-            self.proxy_type = input(f"{self.question}Proxy type {self.opbracket}http/https/socks4/socks5{self.closebrckt}{self.arrow}")
+            self.proxy_typee = input(f"{self.opbracket2}1{self.closebrckt2} http   | {self.opbracket2}2{self.closebrckt2} https\n{self.opbracket2}3{self.closebrckt2} socks4 | {self.opbracket2}4{self.closebrckt2} socks5\n{self.question}Proxy type{self.arrow}")
+            if self.proxy_typee == "1":
+                self.proxy_type = "http"
+            elif self.proxy_typee == "2":
+                self.proxy_type = "https"
+            elif self.proxy_typee == "3":
+                self.proxy_type = "socks4"
+            elif self.proxy_typee == "4":
+                self.proxy_type = "socks5"
+            else: self.use_proxies = False
         else:
             self.use_proxies = False
 
@@ -113,6 +126,22 @@ class Discord(object):
             #logging.info(f"{self.success}Obtained dcfduid cookie: {dcfduid}")
             #logging.info(f"{self.success}Obtained sdcfduid cookie: {sdcfduid}")
             #logging.info(f"{self.success}Obtained fingerprint: {fingerprint}")
+        useragent = random.choice(self.useragents)
+        if "Windows" in useragent: device = "Windows"
+        elif "Macintosh" in useragent: device = "Mac OS X"
+        elif "Linux" in useragent: device = "Ubuntu"
+        elif "iPad" in useragent: device = "iPadOS"
+        elif "iPhone" in useragent: device = "iOS"
+        elif "Android" in useragent: device = "Android 11"
+        elif "X11" in useragent: device = "Unix"
+        elif "iPod" in useragent: device = "iOS"
+        elif "PlayStation" in useragent: device = "Orbis OS"
+        else: device = "hoeOS"
+
+        decoded_superproperty = '{"os":"%s","browser":"Discord Client","release_channel":"stable","client_version":"0.0.264","os_version":"15.6.0","os_arch":"x64","system_locale":"en-US","client_build_number":108924,"client_event_source":null}' % (device)
+        message_bytes = decoded_superproperty.encode('ascii')
+        base64_bytes = base64.b64encode(message_bytes)
+        x_super_property = base64_bytes.decode('ascii')
 
         return {
             "Authorization": token,
@@ -127,10 +156,10 @@ class Discord(object):
             "sec-fetch-site": "same-origin",
             "referer": "https://discord.com/channels/@me",
             "TE": "Trailers",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9001 Chrome/83.0.4103.122 Electron/9.3.5 Safari/537.36",
+            "User-Agent": useragent,
             "x-debug-options": "bugReporterEnabled",
             "x-fingerprint": fingerprint,
-            "X-Super-Properties": "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRGlzY29yZCBDbGllbnQiLCJyZWxlYXNlX2NoYW5uZWwiOiJzdGFibGUiLCJjbGllbnRfdmVyc2lvbiI6IjEuMC45MDAxIiwib3NfdmVyc2lvbiI6IjEwLjAuMTkwNDIiLCJvc19hcmNoIjoieDY0Iiwic3lzdGVtX2xvY2FsZSI6ImVuLVVTIiwiY2xpZW50X2J1aWxkX251bWJlciI6ODMwNDAsImNsaWVudF9ldmVudF9zb3VyY2UiOm51bGx9"
+            "X-Super-Properties": x_super_property
         }
 
     async def login(self, token: str, proxy: str):
