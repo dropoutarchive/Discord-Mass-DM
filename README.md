@@ -23,7 +23,7 @@
   </a>
   
   <h2 align="center">
-    <img src="https://readme-typing-svg.herokuapp.com?color=FFFFFF&center=true&size=22&lines=Discord+Mass+DM;Don't+forget+to+leave+a+star;Only+for+educational+purposes;Join+guilded.gg/hoemotion;"/>
+    <img src="https://readme-typing-svg.herokuapp.com?color=FFFFFF&center=true&size=22&lines=Discord+Mass+DM;Don't+forget+to+leave+a+star;Read+the+Wiki;Only+for+educational+purposes;Join+guilded.gg/hoemotion;"/>
   </h2>
 
   <p align="center">
@@ -37,6 +37,8 @@
     <a href="https://github.com/hoemotion/Discord-Mass-DM/issues">Request Feature</a>
   </p>
 </div>
+<h3 align="center">
+  <a href="https://github.com/hoemotion/Discord-Mass-DM/wiki">Read the Wiki</a>
   
 ---------------------------------------
 
@@ -81,3 +83,4 @@
 <p>View dropout's contact information on his <a href = "https://dropout.black/">website</a><br>
 View my contact information on my <a href = "https://hoemotion.github.io/">website</a>
 </p>
+
