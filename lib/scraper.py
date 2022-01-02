@@ -12,7 +12,6 @@ logging.basicConfig(
     datefmt="%H:%M:%S"
 )
 
-
 class Scraper(object):
     def __init__(self, guild_id, channel_id, token):
         self.guild_id = guild_id
@@ -21,9 +20,9 @@ class Scraper(object):
 
         self.scraped = []
         self.blacklisted_roles = []
-        with open("./lib/blacklisted_role_ids.json") as f:
+        with open("./data/config.json") as f:
             blacklisted = json.load(f)
-        for i in blacklisted:
+        for i in blacklisted["blacklisted_roles"]:
             self.blacklisted_roles.append(str(i))
         self.g = "\033[92m"
         self.red = "\x1b[38;5;9m"
