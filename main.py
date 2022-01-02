@@ -41,7 +41,7 @@ class Discord(object):
         self.closebrckt = f"{self.red}){self.rst}"
         self.closebrckt2 = f"{self.g}]{self.rst}"
         self.question = "\x1b[38;5;9m[\x1b[0m?\x1b[38;5;9m]\x1b[0m "
-        self.arrow = " \x1b[38;5;9m->\x1b[0m "
+        self.arrow = f" {self.red}->{self.rst} "
         with open("data/useragents.txt", encoding="utf-8") as f:
             self.useragents = [i.strip() for i in f]
 
@@ -57,24 +57,41 @@ class Discord(object):
             logging.info(f"{self.err} Please insert your tokens correctly in {self.opbracket}tokens.json{self.closebrckt}")
             sys.exit()
         try:
-            with open("data/blacklisted_user_ids.json", "r") as file:
-                blacklisted_ids = json.load(file)
-                for user_id in blacklisted_ids:
-                    self.blacklisted_users.append(str(user_id))
+            with open("data/message.json", "r") as file:
+                data = json.load(file)
+            msg = data['content']
+            embds = data['embeds']
         except Exception:
             logging.info(
-                f"{self.err} Please insert the blacklisted User IDs correctly {self.opbracket}blacklisted_user_ids.json{self.closebrckt}")
+                f"{self.err} Please insert your message correctly in {self.opbracket}message.json{self.closebrckt}\nRead the wiki if you need examples")
+            sys.exit()
+        try:
+            with open("data/config.json", "r") as file:
+                config = json.load(file)
+                for user in config["blacklisted_users"]:
+                    self.blacklisted_users.append(str(user))
+                self.send_embed = config["send_embed"]
+                self.send_message = config["send_normal_message"]
+                not_counter = 0
+                if not self.send_embed:
+                    not_counter += 1
+                    embds = []
+                if not self.send_message:
+                    not_counter += 1
+                    msg = []
+                if not_counter == 2:
+                    logging.info(f"{self.err} You can\'t set send message and send embed to false {self.opbracket}config.json{self.closebrckt}.\nIf you do this you would try to send an empty message\nRead the wiki if you need help")
+                    sys.exit()
+        except Exception:
+            logging.info(
+                f"{self.err} Please insert the configuration stuff correctly {self.opbracket}config.json{self.closebrckt}.\nRead the wiki if you need help")
             sys.exit()
         with open("data/proxies.txt", encoding="utf-8") as f:
             self.proxies = [i.strip() for i in f]
 
         logging.info(
             f"{self.g}[+]{self.rst} Successfully loaded {self.red}%s{self.rst} token(s)\n" % (len(self.tokens)))
-        with open("data/message.json", "r") as file:
-            data = json.load(file)
-        msg = data['content']
-        embds = data['embeds']
-        self.invite = input(f"{self.question}Invite{self.arrow}discord.gg/")
+        self.invite = input(f"{self.question}Invite{self.arrow}discord.gg/").replace("/", "").replace("discord.com", "").replace("discord.gg", "").replace("invite", "").replace("https:", "").replace("http:", "").replace("discordapp.com", "")
         self.leaving = input(f"{self.question}Leave Server after Mass DM? {self.opbracket}y/n{self.closebrckt}{self.arrow}")
         self.mode = input(f"{self.question}Use Proxies? {self.opbracket}y/n{self.closebrckt}{self.arrow}")
         if self.mode.lower() == "y":
@@ -272,7 +289,7 @@ class Discord(object):
                     self.tokens.remove(token)
                     return False
                 elif response.status == 403 and json["code"] == 40003:
-                    logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     time.sleep(self.ratelimit_delay)
                     await self.direct_message(token, channel, user, proxy)
                 elif response.status == 403 and json["code"] == 50007:
@@ -283,7 +300,7 @@ class Discord(object):
                     self.tokens.remove(token)
                     return False
                 elif response.status == 429:
-                    logging.info(f"{self.err}Ratelimited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     time.sleep(self.ratelimit_delay)
                     await self.direct_message(token, channel, user, proxy)
                 elif response.status == 400:
@@ -346,7 +363,6 @@ class Discord(object):
                         logging.info(
                             f"{self.err}{response.status} | {message} | {code} | {self.opbracket}%s{self.closebrckt}" % (
                             token[:59]))
-
 
         except Exception:
             await self.leave(token, proxy)
@@ -437,7 +453,6 @@ class Discord(object):
         else:
             logging.info("All Tasks are done")
             self.stop()
-
 
 if __name__ == "__main__":
     client = Discord()
