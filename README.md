@@ -59,12 +59,12 @@
 * Proxy Support (socks4/socks5/http/https, you have to choose one type multiple proxy types aren't supported)
 * [Proxy Scraper + Checker](https://github.com/hoemotion/proxy-scraper-checker) (hardcore skidded, don't blame me)
 * Random User-Agent with matching Superproperty
+* uncomplicated config.json
 
 ---------------------------------------
 
 ### Milestones
 
-* 55 Stars: add a config.json so disabling embeds etc. becomes easier lol
 * 65 Stars: add Buttons to the message
 * 75 Stars: Fake Phone call (it will only ring, no voice)
 * 90 Stars: uploading Files
