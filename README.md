@@ -69,7 +69,7 @@
 * 65 Stars: add Buttons to the message
 * 75 Stars: Fake Phone call (it will only ring, no voice)
 * 90 Stars: uploading Files
-* 100 Stars: idk, maybe sending a friend request?
+* 100 Stars: Make a new branch which uses the python module rich
 * 150 Stars: Make a new Mass Dm repo (using selenium, almost 300 dms each email verified account)
 
 ---------------------------------------
