@@ -52,7 +52,7 @@
 * Multiline message and embed support
 * Server Joiner and Leaver
 * Multiple Tokens
-  Multi functional Token formatter
+* Multi functional Token formatter
 * Blacklist Users
 * Avoid DMing Bots
 * Keep Tokens Online [OPTIONAL]
