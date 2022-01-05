@@ -76,7 +76,7 @@
   
 ### To Do:
   
-* Fix the Proxy format
+* Fix the Proxy format (add auth proxies)
 * Add delay rotating so it's not always the same speed
   
 ---------------------------------------
