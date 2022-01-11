@@ -133,8 +133,6 @@ def txt_to_txt():
  print()
  if len(txtfile) == 0:
   txtfile = "output.txt"
- with open(txtfile)as e:
-  t = [i.strip() for i in e]
  e.close()
  out_file = open(txtfile, "a")
  f.close()
@@ -149,13 +147,13 @@ def txt_to_txt():
    tkn = tkn.split(':')
    for i in tkn:
     if len(i) > 50:
-     if i not in t and '@' not in i and '!' not in i and '?' not in i:
+     if '@' not in i and '!' not in i and '?' not in i:
       b += 1
-      t.append(i)
       out_file.write(i + "\n")
    bar.update(all)
    livebar.update(Align.center(bar))
    console.file.write("\r")
+  out_file.close()
  e = time()
  elapsed = e - s
  elapsed_ms = elapsed * 1000
@@ -172,13 +170,6 @@ def json_to_txt():
  print()
  if len(txtfile) == 0:
   txtfile = "output.txt"
- with open(txtfile)as e:
-  t = [i.strip() for i in e]
-  for i in t:
-   if i not in tkns:
-    if len(i) > 50:
-     tkns.append(i)
- e.close()
  out_file = open(txtfile, "a")
  f.close()
  bar = ProgressBar(width=55, total=len(t))
@@ -188,6 +179,7 @@ def json_to_txt():
  with Live(console=console) as livebar:
   exchange_rate_dict: Dict[Tuple[str, str], float] = {}
   for tkn in tkns:
+  
    all += 1
    if len(tkn) > 50:
      if tkn not in t and '@' not in tkn and '!' not in tkn and '?' not in tkn:
@@ -197,6 +189,7 @@ def json_to_txt():
    bar.update(all)
    livebar.update(Align.center(bar))
    console.file.write("\r")
+  out_file.close()
  e = time()
  elapsed = e - s
  elapsed_ms = elapsed * 1000
