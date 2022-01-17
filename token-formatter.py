@@ -1,5 +1,6 @@
 import json, os; from time import time
 try:
+ import rich
  from rich.progress_bar import ProgressBar
  from rich.console import Console
  from rich.live import Live
