@@ -49,7 +49,7 @@
 * Easy to use
 * Free
 * Auto Scrapes User
-* Multiline message and embed support
+* Multiline message and embed support (**embeds were patched by discord aka pedo squad**)
 * Server Joiner and Leaver
 * Multiple Tokens
 * Multi functional Token formatter
@@ -66,11 +66,11 @@
 
 ### Milestones
 
-* 65 Stars: add Buttons to the message *(almost done)*
+* 65 Stars: add Buttons to the message *(I guess that this feature got patched by discord aswell)*
 * 75 Stars: Fake Phone call (it will only ring, no voice)
 * 90 Stars: uploading Files
 * 100 Stars: Add a rich table giving us information of the total dms sent, time taken, etc.
-* 150 Stars: Make a new Mass Dm repo (using selenium, almost 300 dms each email verified account)
+* 300 Stars: Make a new Mass Dm repo (using selenium, almost 300 dms each email verified account)
 
 ---------------------------------------
   
