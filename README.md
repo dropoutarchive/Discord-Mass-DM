@@ -11,9 +11,11 @@
   
 <br/>
 <div align="center">
-  </a>
   <a href="https://guilded.gg/karma">
-    <img src="https://img.shields.io/static/v1?label=Guilded&message=Click%20here&color=DBAB08&style=for-the-badge&logo=guilded" alt="Discord-Server" width="200">
+    <img src="https://img.shields.io/static/v1?label=Guilded&message=Click%20here&color=DBAB08&style=for-the-badge&logo=guilded" alt="Guilded-Server" width="200">
+  </a>
+    <a href="https://matrix.to/#/#hoemotion:matrix.org">
+    <img src="https://img.shields.io/static/v1?label=Element&message=Click%20here&color=20C073&style=for-the-badge&logo=element" alt="Element-Server" width="200">
   </a>
   <br>
   <a href="https://github.com/hoemotion/Discord-Mass-DM">
@@ -21,7 +23,7 @@
   </a>
   
   <h2 align="center">
-    <img src="https://readme-typing-svg.herokuapp.com?color=FFFFFF&center=true&size=22&lines=Discord+Mass+DM;Don't+forget+to+leave+a+star;Read+the+Wiki;Only+for+educational+purposes;Join+guilded.gg/hoemotion;"/>
+    <img src="https://readme-typing-svg.herokuapp.com?color=FFFFFF&center=true&size=22&lines=Discord+Mass+DM;Don't+forget+to+leave+a+star;Read+the+Wiki;Only+for+educational+purposes;Join+guilded.gg/karma;"/>
   </h2>
 
   <p align="center">
@@ -85,6 +87,7 @@
 
 <p align="left">
 <a href = "https://guilded.gg/karma"><img src="https://img.icons8.com/fluency/48/000000/guilded.png"/></a>
+<a href = "https://matrix.to/#/#hoemotion:matrix.org"><img src="https://img.icons8.com/ios/50/000000/matrix-logo.png"/></a>
 </p>
 
 <p>View dropout's contact information on his <a href = "https://dropout.black/">website</a><br>
