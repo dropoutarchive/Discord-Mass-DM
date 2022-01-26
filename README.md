@@ -11,8 +11,6 @@
   
 <br/>
 <div align="center">
-  <a href="https://discord.com/invite/verQuxaBqy">
-    <img src="https://img.shields.io/static/v1?label=Discord&message=Click%20here&color=7289DA&style=for-the-badge&logo=discord" alt="Discord-Server" width="200">
   </a>
   <a href="https://guilded.gg/karma">
     <img src="https://img.shields.io/static/v1?label=Guilded&message=Click%20here&color=DBAB08&style=for-the-badge&logo=guilded" alt="Discord-Server" width="200">
@@ -86,7 +84,6 @@
 ### Contact
 
 <p align="left">
-<a href = "https://discord.gg/verQuxaBqy"><img src="https://img.icons8.com/color/48/000000/discord.png"/></a>
 <a href = "https://guilded.gg/karma"><img src="https://img.icons8.com/fluency/48/000000/guilded.png"/></a>
 </p>
 
