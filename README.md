@@ -49,7 +49,7 @@
 * Easy to use
 * Free
 * Auto Scrapes User
-* Multiline message and embed support (**embeds were patched by discord aka pedo squad**)
+* Multiline message and embed support (*Embeds will only work as a link from now on*)
 * Server Joiner and Leaver
 * Multiple Tokens
 * Multi functional Token formatter
@@ -66,18 +66,15 @@
 
 ### Milestones
 
-* 65 Stars: add Buttons to the message *(I guess that this feature got patched by discord aswell)*
-* 75 Stars: Fake Phone call (it will only ring, no voice)
-* 90 Stars: uploading Files
-* 100 Stars: Add a rich table giving us information of the total dms sent, time taken, etc.
-* 300 Stars: Make a new Mass Dm repo (using selenium, almost 300 dms each email verified account)
+* 300 Stars: Make a new Mass Dm repo (using selenium, almost 300 dms each email verified and aged account, pretty slow but healthy for the tokens)
 
 ---------------------------------------
   
 ### To Do:
-  
-* Fix the Proxy format (add auth proxies)
-* Add delay rotating so it's not always the same speed
+* [x] Add a rich table giving us detailed information *done* but i never tested the code lmao as the token prices are too high  
+* [x] Fix the Proxy format (add auth proxies)
+* [ ] uploading Files (almost done)
+* [ ] Add delay rotating so it's not always the same speed
   
 ---------------------------------------
   
