@@ -1,13 +1,14 @@
-# don't forget to leave a star <3 https://github.com/hoemotion/Disocrd-Mass-Dm
-import os, sys, time, random, asyncio, json, logging, base64; from datetime import datetime
-from lib.scraper import Scraper
+# don't forget to leave a star <3 https://github.com/hoemotion/Discord-Mass-Dm
+import os, sys, time, random, asyncio, json, logging, base64; from datetime import datetime; from typing import Dict, Tuple
+from lib.scrape import scrape
 try:
-    import psutil; from aiohttp import ClientSession; from tasksio import TaskPool
+    import psutil; from aiohttp import ClientSession; from tasksio import TaskPool; from rich.table import Table; from rich.console import Console; from rich.highlighter import ReprHighlighter
 except ImportError:
     os.system("pip install aiohttp")
     os.system("pip install tasksio")
     os.system("pip install psutil")
-    import psutil; from tasksio import TaskPool; from aiohttp import ClientSession
+    os.system("pip install rich")
+    import psutil; from tasksio import TaskPool; from aiohttp import ClientSession; from rich.table import Table; from rich.console import Console; from rich.highlighter import ReprHighlighter
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,6 +28,7 @@ class Discord(object):
         self.clear()
         self.tokens = []
         self.blacklisted_users = []
+        self.users = []
 
         self.guild_name = None
         self.guild_id = None
@@ -53,6 +55,7 @@ class Discord(object):
                     sys.exit()
                 for tkn in tkns:
                     self.tokens.append(tkn)
+
         except Exception:
             logging.info(f"{self.err} Please insert your tokens correctly in {self.opbracket}tokens.json{self.closebrckt}")
             sys.exit()
@@ -60,7 +63,6 @@ class Discord(object):
             with open("data/message.json", "r") as file:
                 data = json.load(file)
             msg = data['content']
-            embds = data['embeds']
         except Exception:
             logging.info(
                 f"{self.err} Please insert your message correctly in {self.opbracket}message.json{self.closebrckt}\nRead the wiki if you need examples")
@@ -75,10 +77,18 @@ class Discord(object):
                 not_counter = 0
                 if not self.send_embed:
                     not_counter += 1
-                    embds = []
+                    self.embd = ""
+                else:
+                    logging.info(f"{self.g}[+]{self.rst} Build your embed link at {self.red}https://embed.rauf.wtf/{self.rst}")
+                    self.embd = input(f"{self.question}Embed Link{self.arrow}")
+                    self.hide = input(f"{self.question}Should the Embed link be hidden? (This will increase the message lenght by 1k characters, but the link will be invisible)\n(y/n){self.arrow}")
+                    if self.hide.lower() == "y":
+                        self.embd = f"\n ||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||__ {self.embd}"
+                    else:
+                        self.embd = f"\n{self.embd}"
                 if not self.send_message:
                     not_counter += 1
-                    msg = []
+                    msg = ""
                 if not_counter == 2:
                     logging.info(f"{self.err} You can\'t set send message and send embed to false {self.opbracket}config.json{self.closebrckt}.\nIf you do this you would try to send an empty message\nRead the wiki if you need help")
                     sys.exit()
@@ -110,15 +120,33 @@ class Discord(object):
             self.use_proxies = False
 
         self.message = msg
-        self.embed = embds
+        self.embed = self.embd
         try:
             self.delay = float(input(f"{self.question}Delay{self.arrow}"))
         except Exception:
-            self.delay = 0
+            self.delay = 5
         try:
             self.ratelimit_delay = float(input(f"{self.question}Rate limit Delay{self.arrow}"))
         except Exception:
             self.ratelimit_delay = 300
+        self.total_tokens = len(self.tokens)
+        self.invalid_tokens_start = 0
+        self.locked_tokens_start = 0
+        self.locked_tokens_total = 0
+        self.invalid_tokens_total = 0
+        self.valid_tokens_start = 0
+        self.valid_tokens_end = 0
+        self.total_rate_limits = 0
+        self.total_server_joins_success = 0
+        self.total_server_joins_locked = 0
+        self.total_server_joins_invalid = 0
+        self.total_dms_success = 0
+        self.total_dms_fail = 0
+        self.invalid_token_dm = 0
+        self.locked_token_dm = 0
+        self.total_server_leave_success = 0
+        self.total_server_leave_locked = 0
+        self.total_server_leave_invalid = 0
 
         print()
 
@@ -193,15 +221,19 @@ class Discord(object):
                     if response.status == 200:
                         logging.info(
                             f"{self.success}Successfully logged in {code}{self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        self.valid_tokens_start += 1
                     if response.status == 401:
                         logging.info(f"{self.err}Invalid account {code}{self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        self.invalid_tokens_start += 1
                         self.tokens.remove(token)
                     if response.status == 403:
                         logging.info(f"{self.err}Locked account {code}{self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        self.locked_tokens_start += 1
                         self.tokens.remove(token)
                     if response.status == 429:
                         logging.info(f"{self.err}Rate limited {code}{self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
+                        self.total_rate_limits += 1
                         await self.login(token, proxy)
         except Exception:
             await self.login(token, proxy)
@@ -218,14 +250,18 @@ class Discord(object):
                         self.channel_id = json["channel"]["id"]
                         logging.info(f"{self.success}Successfully joined %s {self.opbracket}%s{self.closebrckt}" % (
                         self.guild_name[:20], token[:59]))
+                        self.total_server_joins_success += 1
                     elif response.status == 401:
                         logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         self.tokens.remove(token)
+                        self.total_server_joins_invalid += 1
                     elif response.status == 403:
                         logging.info(f"{self.err}Locked account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        self.total_server_joins_locked += 1
                         self.tokens.remove(token)
                     elif response.status == 429:
                         logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        self.total_rate_limits += 1
                         time.sleep(self.ratelimit_delay)
                         await self.join(token, proxy)
                     elif response.status == 404:
@@ -250,6 +286,7 @@ class Discord(object):
                         return json["id"]
                     elif response.status == 401:
                         logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        self.invalid_tokens_total += 1
                         self.tokens.remove(token)
                         return False
                     elif response.status == 403:
@@ -258,6 +295,7 @@ class Discord(object):
                         self.tokens.remove(token)
                     elif response.status == 429:
                         logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                        self.total_rate_limits += 1
                         time.sleep(self.ratelimit_delay)
                         return await self.create_dm(token, user, proxy)
                     elif response.status == 400:
@@ -273,35 +311,42 @@ class Discord(object):
             return await self.create_dm(token, user, proxy)
 
     async def direct_message(self, token: str, channel: str, user, proxy: str):
-        embed = self.get_user_in_embed(user)
+        embed = self.embed
         message = self.get_user_in_message(user)
         headers = await self.headers(token)
         async with ClientSession(headers=headers) as virgin:
             async with virgin.post("https://discord.com/api/v9/channels/%s/messages" % (channel),
-                                   json={"content": message, "embeds": embed, "nonce": self.nonce(),
+                                   json={"content": f"{message}{embed}", "nonce": self.nonce(),
                                          "tts": False}, proxy=proxy) as response:
                 json = await response.json()
                 if response.status == 200:
                     logging.info(f"{self.success}Successfully sent message {self.opbracket}%s{self.red}){self.rst}" % (
                     token[:59]))
+                    self.total_dms_success += 1
                 elif response.status == 401:
                     logging.info(f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     self.tokens.remove(token)
+                    self.invalid_tokens_total += 1
+                    self.invalid_token_dm += 1
                     return False
                 elif response.status == 403 and json["code"] == 40003:
                     logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     time.sleep(self.ratelimit_delay)
+                    self.total_rate_limits += 1
                     await self.direct_message(token, channel, user, proxy)
                 elif response.status == 403 and json["code"] == 50007:
                     logging.info(f"{self.err}User has direct messages disabled {self.opbracket}%s{self.closebrckt}" % (
                     token[:59]))
                 elif response.status == 403 and json["code"] == 40002:
                     logging.info(f"{self.err}Locked {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                    self.locked_token_dm += 1
+                    self.locked_tokens_total += 1
                     self.tokens.remove(token)
                     return False
                 elif response.status == 429:
                     logging.info(f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     time.sleep(self.ratelimit_delay)
+                    self.total_rate_limits += 1
                     await self.direct_message(token, channel, user, proxy)
                 elif response.status == 400:
                     code = json["code"]
@@ -316,11 +361,7 @@ class Discord(object):
         message = mssage.replace("<user>", f"<@{user}>")
         return message
 
-    def get_user_in_embed(self, user: str = None):
-        embd = json.dumps(self.embed)
-        embedd = embd.replace("<user>", f"<@{user}>")
-        embed = json.loads(embedd)
-        return embed
+
 
     async def send(self, token: str, user: str, proxy: str):
         channel = await self.create_dm(token, user, proxy)
@@ -343,19 +384,26 @@ class Discord(object):
                         logging.info(
                             f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (
                             token[:59]))
+                        self.total_server_leave_success += 1
                     elif response.status == 204:
                         logging.info(
                             f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (
                             token[:59]))
+                        self.total_server_leave_success += 1
                     elif response.status == 404:
                         logging.info(
                             f"{self.success}Successfully left the Guild {self.opbracket}%s{self.closebrckt}" % (
                             token[:59]))
+                        self.total_server_leave_success += 1
                     elif response.status == 403:
+                        self.total_server_leave_locked += 1
                         logging.info(f"{self.err}{message} | {code} {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     elif response.status == 401:
+                        self.total_server_leave_invalid += 1
+                        self.locked_tokens_total += 1
                         logging.info(f"{self.err}{message} | {code} {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     elif response.status == 429:
+                        self.total_rate_limits += 1
                         logging.info(f"{self.err}{message} | {code} {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                         time.sleep(self.ratelimit_delay)
                         await self.leave(token, proxy)
@@ -372,6 +420,66 @@ class Discord(object):
             logging.info("No tokens loaded.")
             sys.exit()
 
+        def table():
+
+            table = Table(
+                title=f"Total Users Scraped: {len(self.users)}",
+                caption="github.com/hoemotion",
+                caption_justify="right",
+                caption_style="bright_yellow"
+            )
+
+            table.add_column("Tokens", header_style="bright_cyan", style="blue", no_wrap=True)
+            table.add_column("Login Details", header_style="bright_magenta", style="magenta", justify="center")
+            table.add_column("Join Details", justify="center", header_style="light_green", style="bright_green")
+            table.add_column("DM Users", justify="center", header_style="magenta", style="blue")
+            table.add_column("Leave Details", justify="center", header_style="bright_cyan", style="bright_green")
+
+            table.add_row(
+                f"[Total] Tokens: {self.total_tokens}",
+                f"[Login] Valid Tokens: {self.valid_tokens_start}",
+                f"[Join] Valid Tokens: {self.total_server_joins_success}",
+                f"[DM] Total DMed: {self.total_dms_success}\n[DM] Total Failed: {self.total_dms_fail}",
+                f"[Leave] Tokens Left Successfully: {self.total_server_leave_success}",
+                style="on black",
+                end_section=True,
+            )
+            table.add_row(
+                f"[Total] Tokens Invalid: {self.invalid_tokens_total}",
+                f"[Login] Tokens Invalid: {self.invalid_tokens_start}",
+                f"[Join] Tokens Invalid: {self.total_server_joins_invalid}",
+                f"[DM] Tokens Invalid: {self.invalid_token_dm}",
+                f"[Leave] Tokens Invalid: {self.total_server_leave_invalid}",
+                style="on black",
+                end_section=True,
+            )
+            table.add_row(
+                f"[Total] Tokens Locked: {self.locked_tokens_total}",
+                f"[Login] Tokens Locked: {self.locked_tokens_start}",
+                f"[Join] Tokens Locked: {self.total_server_joins_locked}",
+                f"[DM] Tokens Locked: {self.locked_token_dm}",
+                f"[Leave] Tokens Locked: {self.total_server_leave_locked}",
+                style="on black",
+                end_section=True,
+            )
+
+            def header(text: str) -> None:
+                console.print()
+                console.rule(highlight(text))
+                console.print()
+
+            console = Console()
+            highlight = ReprHighlighter()
+
+            table.width = None
+            table.expand = False
+            table.row_styles = ["dim", "none"]
+            table.show_lines = True
+            table.leading = 0
+            header("MassDM analytics")
+            console.print(table, justify="center")
+            return
+
         async with TaskPool(1_000) as pool:
             for token in self.tokens:
                 if len(self.tokens) != 0:
@@ -383,7 +491,8 @@ class Discord(object):
                 else:
                     self.stop()
 
-        if len(self.tokens) == 0: self.stop()
+        if len(self.tokens) == 0:
+            self.stop()
 
         print()
         logging.info("Joining server.")
@@ -401,14 +510,19 @@ class Discord(object):
                 else:
                     self.stop()
 
-        if len(self.tokens) == 0: self.stop()
+        if len(self.tokens) == 0:
+            self.stop()
 
-        scraper = Scraper(
-            token=self.tokens[0],
-            guild_id=self.guild_id,
-            channel_id=self.channel_id
-        )
-        self.users = scraper.fetch()
+        print()
+        logging.info("Scraping Users...\nPlease be patient")
+        print()
+
+
+        members = scrape(self.tokens[0], self.guild_id, self.channel_id)
+        for member in members:
+            if member not in self.users:
+                self.users.append(member)
+
 
         print()
         logging.info(f"Successfully scraped {self.red}%s{self.rst} members" % (len(self.users)))
@@ -430,6 +544,7 @@ class Discord(object):
                     else:
                         logging.info(f"{self.err}Blacklisted User: {self.red}%s{self.rst}" % (user))
                 else:
+                    table()
                     self.stop()
 
         if self.leaving == "y":
@@ -447,11 +562,14 @@ class Discord(object):
                         if self.delay != 0:
                             await asyncio.sleep(self.delay)
                     logging.info("All Tasks are done")
+                    table()
                     self.stop()
                 else:
+                    table()
                     self.stop()
         else:
             logging.info("All Tasks are done")
+            table()
             self.stop()
 
 if __name__ == "__main__":
