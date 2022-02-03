@@ -11,11 +11,16 @@
   
 <br/>
 <div align="center">
-  <a href="https://guilded.gg/karma">
-    <img src="https://img.shields.io/static/v1?label=Guilded&message=Click%20here&color=DBAB08&style=for-the-badge&logo=guilded" alt="Guilded-Server" width="200">
+  <a href="https://www.reddit.com/r/hoemotion/">
+    <img src="https://img.shields.io/static/v1?label=reddit&message=Click%20here&color=FF4500&style=for-the-badge&logo=reddit" alt="Reddit-Community" width="200">
   </a>
     <a href="https://matrix.to/#/#hoemotion:matrix.org">
     <img src="https://img.shields.io/static/v1?label=Element&message=Click%20here&color=20C073&style=for-the-badge&logo=element" alt="Element-Server" width="200">
+  </a>
+
+  <br>
+  <a href="https://guilded.gg/karma">
+    <img src="https://img.shields.io/static/v1?label=Guilded&message=Click%20here&color=DBAB08&style=for-the-badge&logo=guilded" alt="Guilded-Server" width="200">
   </a>
   <br>
   <a href="https://github.com/hoemotion/Discord-Mass-DM">
@@ -84,6 +89,7 @@
 
 <p align="left">
 <a href = "https://guilded.gg/karma"><img src="https://img.icons8.com/fluency/48/000000/guilded.png"/></a>
+  <a href = "https://reddit.com/r/hoemotion"><img src="https://img.icons8.com/doodle/48/000000/reddit--v4.png"/></a>
 <a href = "https://matrix.to/#/#hoemotion:matrix.org"><img src="https://img.icons8.com/ios/50/000000/matrix-logo.png"/></a>
 </p>
 
