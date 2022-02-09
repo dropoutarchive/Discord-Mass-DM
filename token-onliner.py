@@ -42,7 +42,7 @@ def init_websocket(token: str):
 
 def status_changer(ws: websocket.WebSocket):
     status = ["online", "idle", "dnd"]
-    quotes = ["github.com/hoemotion", "guilded.gg/hoemotion", "discord.com/terms", "<3", "github.com/hoemotion", "guilded.gg/hoemotion", "github.com/hoemotion"]
+    quotes = ["github.com/hoemotion", "guilded.gg/karma", "discord.com/terms", "<3", "github.com/hoemotion", "guilded.gg/karma", "github.com/hoemotion"]
     while True:
 
         ws.send(json.dumps({"op" :3 ,"d" :{"status" : random.choice(status) ,"since" :0 ,"activities" :
