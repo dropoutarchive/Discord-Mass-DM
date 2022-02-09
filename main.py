@@ -1,4 +1,4 @@
-# don't forget to leave a star <3 https://github.com/hoemotion/Discord-Mass-Dm
+# don't forget to leave a star <3 https://github.com/hoemotion/discord-mass-dm
 import os, sys, time, random, asyncio, json, logging, base64; from datetime import datetime; from typing import Dict, Tuple
 from lib.scrape import scrape
 try:
@@ -79,7 +79,7 @@ class Discord(object):
                     not_counter += 1
                     self.embd = ""
                 else:
-                    logging.info(f"{self.g}[+]{self.rst} Build your embed link at {self.red}https://embed.rauf.wtf/{self.rst}")
+                    logging.info(f"{self.g}[+]{self.rst} You can build your embed link at {self.red}https://embed.rauf.wtf/{self.rst},\nyou could also host your own html file so the url becomes shorter")
                     self.embd = input(f"{self.question}Embed Link{self.arrow}")
                     self.hide = input(f"{self.question}Should the Embed link be hidden? (This will increase the message lenght by 1k characters, but the link will be invisible)\n(y/n){self.arrow}")
                     if self.hide.lower() == "y":
@@ -147,6 +147,11 @@ class Discord(object):
         self.total_server_leave_success = 0
         self.total_server_leave_locked = 0
         self.total_server_leave_invalid = 0
+        self.captcha_api_key = "YOUR CAPTCHA API KEY HERE"
+        self.captcha_submit_url = "http://2captcha.com/in.php"
+        self.captcha_get_url = "http://2captcha.com/res.php"
+        self.discord_hcaptcha_id = "4c672d35-0701-42b2-88c3-78380b0db560"
+        self.discord_captcha_referer = "https://discord.com/channels/@me"
 
         print()
 
@@ -206,6 +211,43 @@ class Discord(object):
             "x-fingerprint": fingerprint,
             "X-Super-Properties": x_super_property
         }
+    async def submit_cap_key(self, proxy):
+        url = self.captcha_submit_url
+        querystring = {
+            "key": self.captcha_api_key,
+            "method": "hcaptcha",
+            "sitekey": self.discord_hcaptcha_id,
+            "pageurl": self.discord_captcha_referer
+        }
+        headers = {"User-Agent": "Mozilla/5.0", "Content-Type": "application/json"}
+        async with ClientSession(headers=headers) as mass_dm_brrr:
+            async with mass_dm_brrr.post(url, params=querystring, proxy=proxy) as response:
+                text = await response.text()
+                return text.split("|", 1)[1]
+
+    async def get_discord_captcha(self, captcha_key_response, proxy):
+        proxies = {"http": proxy,
+                   "https": proxy}
+        params = {"key": self.captcha_api_key, "action": "get", "id": captcha_key_response}
+        async with ClientSession() as mass_dm_brrr:
+            async with mass_dm_brrr.get(self.captcha_get_url, params=params, proxy=proxy) as response:
+                text = await response.text()
+                return text.split("|", 1)
+
+    async def getCaptcha(self, proxy):
+        captcha_step_one = await self.submit_cap_key(proxy)
+        logging.info(f"Captcha step one = {captcha_step_one}")
+        looping = True
+        while looping:
+            logging.info('Sleeping 10 seconds')
+            await asyncio.sleep(10)
+            captcha_step_two = await self.get_discord_captcha(captcha_step_one, proxy)
+            try:
+                if len(captcha_step_two[1]) > 60:
+                    logging.info("Captcha done")
+                    return captcha_step_two[1]
+            except IndexError:
+                logging.info("Captcha Not Found!")
 
     async def login(self, token: str, proxy: str):
         try:
@@ -267,6 +309,41 @@ class Discord(object):
                     elif response.status == 404:
                         logging.info(f"{self.err}Server-Invite is invalid or has expired :/")
                         self.stop()
+                    elif response.status == 400:
+                        logging.info(f"Bad Request, trying to join with hcaptcha..\n({json})")
+                        captcha_key = await self.getCaptcha(proxy)
+                        async with ClientSession(headers=headers) as hcap_join:
+                            async with hcap_join.post("https://discord.com/api/v9/invites/%s" % (self.invite), json={"captcha_key": captcha_key}, proxy=proxy) as response:
+                                if response.status == 200:
+                                    self.guild_name = json["guild"]["name"]
+                                    self.guild_id = json["guild"]["id"]
+                                    self.channel_id = json["channel"]["id"]
+                                    logging.info(
+                                        f"{self.success}Successfully joined %s by using hcap bypass {self.opbracket}%s{self.closebrckt}" % (
+                                            self.guild_name[:20], token[:59]))
+                                    self.total_server_joins_success += 1
+                                elif response.status == 401:
+                                    logging.info(
+                                        f"{self.err}Invalid account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                                    self.tokens.remove(token)
+                                    self.total_server_joins_invalid += 1
+                                elif response.status == 403:
+                                    logging.info(
+                                        f"{self.err}Locked account {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                                    self.total_server_joins_locked += 1
+                                    self.tokens.remove(token)
+                                elif response.status == 429:
+                                    logging.info(
+                                        f"{self.err}Rate limited {self.opbracket}%s{self.closebrckt}" % (token[:59]))
+                                    self.total_rate_limits += 1
+                                    time.sleep(self.ratelimit_delay)
+                                    await self.join(token, proxy)
+                                elif response.status == 404:
+                                    logging.info(f"{self.err}Server-Invite is invalid or has expired :/")
+                                    self.stop()
+                                else:
+                                    self.tokens.remove(token)
+
                     else:
                         self.tokens.remove(token)
         except Exception:
