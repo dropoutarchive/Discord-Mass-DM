@@ -63,7 +63,7 @@ class DiscordSocket(websocket.WebSocketApp):
         for i in blacklisted["blacklisted_roles"]:
             self.blacklisted_roles.append(str(i))
         for i in blacklisted["blacklisted_users"]:
-            self.blacklisted_roles.append(str(i))
+            self.blacklisted_users.append(str(i))
 
         self.socket_headers = {
             "Accept-Encoding": "gzip, deflate, br",
