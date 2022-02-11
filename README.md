@@ -76,10 +76,12 @@
 ---------------------------------------
   
 ### To Do:
-* [x] Add a rich table giving us detailed information *done* but i never tested the code lmao as the token prices are too high  
-* [x] Fix the Proxy format (add auth proxies)
+  
+* [x] Add a rich table giving us detailed information
 * [ ] uploading Files (almost done)
 * [ ] Add delay rotating so it's not always the same speed
+* [ ] Remember fingerprint, superproperty, etc. for each token so its becomes less suspicious (I already have a concept for this)
+* [ ] Make the functions seperated like in my old Karuma script or [DMDGO](https://github.com/V4NSH4J/discord-mass-DM-GO) (Vanshaj is a pro, you should go and check his repo out)
   
 ---------------------------------------
   
@@ -96,4 +98,5 @@
 <p>View dropout's contact information on his <a href = "https://dropout.black/">website</a><br>
 View my contact information on my <a href = "https://hoemotion.github.io/">website</a>
 </p>
+  
 
