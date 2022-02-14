@@ -188,7 +188,7 @@ class Discord(object):
         elif "PlayStation" in useragent: device = "Orbis OS"
         else: device = "hoeOS"
 
-        decoded_superproperty = '{"os":"%s","browser":"Discord Client","release_channel":"stable","client_version":"0.0.264","os_version":"15.6.0","os_arch":"x64","system_locale":"en-US","client_build_number":108924,"client_event_source":null}' % (device)
+        decoded_superproperty = '{"os":"%s","browser":"Discord Client","release_channel":"stable","client_version":"1.0.9003","os_version":"15.6.0","os_arch":"x64","system_locale":"en-US","client_build_number":114407,"client_event_source":null}' % (device)
         message_bytes = decoded_superproperty.encode('ascii')
         base64_bytes = base64.b64encode(message_bytes)
         x_super_property = base64_bytes.decode('ascii')
