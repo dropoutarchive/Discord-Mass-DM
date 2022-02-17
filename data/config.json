@@ -1,5 +1,5 @@
 {
-  "send_embed": true,
+  "send_embed": false,
   "send_normal_message": true,
   "blacklisted_roles": ["132324335", "535424242424", "43527181817"],
   "blacklisted_users": ["6625345642642", "7354542"],
