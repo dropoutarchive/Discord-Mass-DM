@@ -667,6 +667,7 @@ class Discord(object):
 
             if len(self.tokens) == 0:
                 self.stop()
+            return "success"
 
         async def join_server():
             self.invite = input(f"{self.question}Invite{self.arrow}discord.gg/").replace("/", "").replace("discord.com",
