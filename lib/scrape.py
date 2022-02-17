@@ -1,9 +1,8 @@
-# cr: https://github.com/vida1338/MassDN-source/blob/main/scrape.py  thx bro <3 (IDK if anyone calls me a skid for using this, i implemented blacklisting roles auto avoiding bots and blacklisting users so its only 99% skidded :))
-import json, os, time, logging
-try: import websocket, threading
+# cr: https://github.com/vida1338/MassDN-source/blob/main/scrape.py  thx bro <3
+import json, threading, time, logging, os
+try: import websocket
 except:
     os.system("pip install websocket-client")
-    os.system("pip install threading")
 logging.basicConfig(
     level=logging.INFO,
     format="\x1b[38;5;9m[\x1b[0m%(asctime)s\x1b[38;5;9m]\x1b[0m %(message)s\x1b[0m",
