@@ -1,5 +1,5 @@
 # don't forget to leave a star <3 https://github.com/hoemotion/discord-mass-dm
-import os, sys, time, random, asyncio, json, logging, base64; from datetime import datetime; from typing import Dict, Tuple
+import os, sys, time, random, asyncio, json , logging, base64; from datetime import datetime; from typing import Dict, Tuple
 from lib.scrape import scrape
 try:
     import psutil; from aiohttp import ClientSession; from tasksio import TaskPool; from rich.table import Table; from rich.console import Console; from rich.highlighter import ReprHighlighter
@@ -33,6 +33,7 @@ class Discord(object):
         self.guild_name = None
         self.guild_id = None
         self.channel_id = None
+        self.invite = None
         self.g = "\033[92m"
         self.red = "\x1b[38;5;9m"
         self.rst = "\x1b[0m"
@@ -74,6 +75,11 @@ class Discord(object):
                     self.blacklisted_users.append(str(user))
                 self.send_embed = config["send_embed"]
                 self.send_message = config["send_normal_message"]
+                self.captcha_api_key = config["captcha_api_key"]
+                self.captcha_submit_url = config["captcha_submit_url"]
+                self.captcha_get_url = config["captcha_get_url"]
+                self.discord_hcaptcha_id = "4c672d35-0701-42b2-88c3-78380b0db560"
+                self.discord_captcha_referer = "https://discord.com/channels/@me"
                 not_counter = 0
                 if not self.send_embed:
                     not_counter += 1
@@ -101,8 +107,6 @@ class Discord(object):
 
         logging.info(
             f"{self.g}[+]{self.rst} Successfully loaded {self.red}%s{self.rst} token(s)\n" % (len(self.tokens)))
-        self.invite = input(f"{self.question}Invite{self.arrow}discord.gg/").replace("/", "").replace("discord.com", "").replace("discord.gg", "").replace("invite", "").replace("https:", "").replace("http:", "").replace("discordapp.com", "")
-        self.leaving = input(f"{self.question}Leave Server after Mass DM? {self.opbracket}y/n{self.closebrckt}{self.arrow}")
         self.mode = input(f"{self.question}Use Proxies? {self.opbracket}y/n{self.closebrckt}{self.arrow}")
         if self.mode.lower() == "y":
             self.use_proxies = True
@@ -147,11 +151,6 @@ class Discord(object):
         self.total_server_leave_success = 0
         self.total_server_leave_locked = 0
         self.total_server_leave_invalid = 0
-        self.captcha_api_key = "YOUR CAPTCHA API KEY HERE"
-        self.captcha_submit_url = "http://2captcha.com/in.php"
-        self.captcha_get_url = "http://2captcha.com/res.php"
-        self.discord_hcaptcha_id = "4c672d35-0701-42b2-88c3-78380b0db560"
-        self.discord_captcha_referer = "https://discord.com/channels/@me"
 
         print()
 
@@ -164,34 +163,114 @@ class Discord(object):
         unixts = time.mktime(date.timetuple())
         return str((int(unixts) * 1000 - 1420070400000) * 4194304)
 
-    async def headers(self, token):
-        async with ClientSession() as client:
-            async with client.get("https://discord.com/app") as response:
-                cookies = str(response.cookies)
-                dcfduid = cookies.split("dcfduid=")[1].split(";")[0]
-                sdcfduid = cookies.split("sdcfduid=")[1].split(";")[0]
-            async with client.get("https://discordapp.com/api/v9/experiments") as finger:
-                json = await finger.json()
-                fingerprint = json["fingerprint"]
-            #logging.info(f"{self.success}Obtained dcfduid cookie: {dcfduid}")
-            #logging.info(f"{self.success}Obtained sdcfduid cookie: {sdcfduid}")
-            #logging.info(f"{self.success}Obtained fingerprint: {fingerprint}")
-        useragent = random.choice(self.useragents)
-        if "Windows" in useragent: device = "Windows"
-        elif "Macintosh" in useragent: device = "Mac OS X"
-        elif "Linux" in useragent: device = "Ubuntu"
-        elif "iPad" in useragent: device = "iPadOS"
-        elif "iPhone" in useragent: device = "iOS"
-        elif "Android" in useragent: device = "Android 11"
-        elif "X11" in useragent: device = "Unix"
-        elif "iPod" in useragent: device = "iOS"
-        elif "PlayStation" in useragent: device = "Orbis OS"
-        else: device = "hoeOS"
+    # need to overwrite the whole json when updating, luckily the database won't be enormous
+    def overwrite_json(self, content):
+        self.json_db = open(f"data/token_profiles.json", "w")
+        self.clean_json = json.dumps(content, indent=4, separators=(",", ": "))
+        self.json_db.write(self.clean_json)
+        self.json_db.close()
+    def find_index_in_db(self, data_to_search, token_to_find):
+        token_to_find = str(token_to_find)
+        for i in range(len(data_to_search)):
+            if data_to_search[i]["token"] == token_to_find:
+                # token already exists in json file
+                return int(i), "none"
 
-        decoded_superproperty = '{"os":"%s","browser":"Discord Client","release_channel":"stable","client_version":"1.0.9003","os_version":"15.6.0","os_arch":"x64","system_locale":"en-US","client_build_number":114407,"client_event_source":null}' % (device)
-        message_bytes = decoded_superproperty.encode('ascii')
-        base64_bytes = base64.b64encode(message_bytes)
-        x_super_property = base64_bytes.decode('ascii')
+        # in this case, the token isnt in the json file yet
+        # so we automatically create him
+        data_to_search.append({
+            "token": str(token_to_find),
+            "dcfduid": "none",
+            "sdcfduid": "none",
+            "fingerprint": "none",
+            "super_property": "none",
+            "user_agent": "none"
+            # will overwrite all the "none" with needed things later
+        })
+        # now that the token profile is created, re-check and return int
+
+        for i in range(len(data_to_search)):
+            if data_to_search[i]["token"] == token_to_find:
+                return i, data_to_search
+
+    async def setup(self, token):
+        if not os.path.exists("data/token_profiles.json"):
+            creating_file = open(f"data/token_profiles.json", "w")
+            creating_file.write("""{\n\t"tokens": []
+}""")
+            creating_file.close()
+
+        token_profiles = open("data/token_profiles.json")
+        json_content = json.load(token_profiles)
+        token_index, new_data = self.find_index_in_db(json_content["tokens"], token)
+        if new_data != "none":
+            json_content["tokens"] = new_data
+        json_token_content = json_content["tokens"][token_index]
+
+        if json_token_content["dcfduid"] == "none":
+            async with ClientSession() as client:
+                async with client.get("https://discord.com/app") as response:
+                    cookies = str(response.cookies)
+                    dcfduid = cookies.split("dcfduid=")[1].split(";")[0]
+                    sdcfduid = cookies.split("sdcfduid=")[1].split(";")[0]
+                async with client.get("https://discordapp.com/api/v9/experiments") as finger:
+                    jsonn = await finger.json()
+                    fingerprint = jsonn["fingerprint"]
+                # logging.info(f"{self.success}Obtained dcfduid cookie: {dcfduid}")
+                # logging.info(f"{self.success}Obtained sdcfduid cookie: {sdcfduid}")
+                # logging.info(f"{self.success}Obtained fingerprint: {fingerprint}")
+                useragent = random.choice(self.useragents)
+                if "Windows" in useragent:
+                    device = "Windows"
+                elif "Macintosh" in useragent:
+                    device = "Mac OS X"
+                elif "Linux" in useragent:
+                    device = "Ubuntu"
+                elif "iPad" in useragent:
+                    device = "iPadOS"
+                elif "iPhone" in useragent:
+                    device = "iOS"
+                elif "Android" in useragent:
+                    device = "Android 11"
+                elif "X11" in useragent:
+                    device = "Unix"
+                elif "iPod" in useragent:
+                    device = "iOS"
+                elif "PlayStation" in useragent:
+                    device = "Orbis OS"
+                else:
+                    device = "hoeOS"
+
+                decoded_superproperty = '{"os":"%s","browser":"Discord Client","release_channel":"stable","client_version":"0.0.264","os_version":"15.6.0","os_arch":"x64","system_locale":"en-US","client_build_number":108924,"client_event_source":null}' % (
+                    device)
+                message_bytes = decoded_superproperty.encode('ascii')
+                base64_bytes = base64.b64encode(message_bytes)
+                x_super_property = base64_bytes.decode('ascii')
+                if json_token_content["dcfduid"] == "none":
+                    json_token_content["dcfduid"] = dcfduid
+                if json_token_content["sdcfduid"] == "none":
+                    json_token_content["sdcfduid"] = sdcfduid
+                if json_token_content["fingerprint"] == "none":
+                    json_token_content["fingerprint"] = fingerprint
+                if json_token_content["super_property"] == "none":
+                    json_token_content["super_property"] = x_super_property
+                if json_token_content["user_agent"] == "none":
+                    json_token_content["user_agent"] = useragent
+                json_content["tokens"][token_index] = json_token_content
+                self.overwrite_json(json_content)
+
+    async def headers(self, token):
+        token_profiles = open("data/token_profiles.json")
+        json_content = json.load(token_profiles)
+        token_index, new_data = self.find_index_in_db(json_content["tokens"], token)
+        if new_data != "none":
+            json_content["tokens"] = new_data
+        json_token_content = json_content["tokens"][token_index]
+        useragent = json_token_content["user_agent"]
+        x_super_property = json_token_content["super_property"]
+        dcfduid = json_token_content["dcfduid"]
+        sdcfduid = json_token_content["sdcfduid"]
+        fingerprint = json_token_content["fingerprint"]
 
         return {
             "Authorization": token,
@@ -226,8 +305,6 @@ class Discord(object):
                 return text.split("|", 1)[1]
 
     async def get_discord_captcha(self, captcha_key_response, proxy):
-        proxies = {"http": proxy,
-                   "https": proxy}
         params = {"key": self.captcha_api_key, "action": "get", "id": captcha_key_response}
         async with ClientSession() as mass_dm_brrr:
             async with mass_dm_brrr.get(self.captcha_get_url, params=params, proxy=proxy) as response:
@@ -414,6 +491,7 @@ class Discord(object):
                 elif response.status == 403 and json["code"] == 50007:
                     logging.info(f"{self.err}User has direct messages disabled {self.opbracket}%s{self.closebrckt}" % (
                     token[:59]))
+                    self.total_dms_fail += 1
                 elif response.status == 403 and json["code"] == 40002:
                     logging.info(f"{self.err}Locked {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                     self.locked_token_dm += 1
@@ -426,6 +504,7 @@ class Discord(object):
                     self.total_rate_limits += 1
                     await self.direct_message(token, channel, user, proxy)
                 elif response.status == 400:
+                    self.total_dms_fail += 1
                     code = json["code"]
                     logging.info(f"{self.err}Can\'t DM this User! {self.opbracket}{code}{self.closebrckt} | {self.opbracket}%s{self.closebrckt}" % (token[:59]))
                 elif response.status == 404:
@@ -492,9 +571,10 @@ class Discord(object):
         except Exception:
             await self.leave(token, proxy)
 
-    async def start(self):
+    async def start(self, first_start):
         if len(self.tokens) == 0:
             logging.info("No tokens loaded.")
+            time.sleep(5)
             sys.exit()
 
         def table():
@@ -557,76 +637,128 @@ class Discord(object):
             console.print(table, justify="center")
             return
 
-        async with TaskPool(1_000) as pool:
-            for token in self.tokens:
-                if len(self.tokens) != 0:
-                    if self.use_proxies:
-                        proxy = "%s://%s" % (self.proxy_type, random.choice(self.proxies))
+        if first_start == "true":
+            print()
+            logging.info(
+                "Setting up the token_profiles.json file..\nThis might take a while depending on the amount of your tokens.")
+            print()
+
+            async with TaskPool(1_000) as pool:
+                for token in self.tokens:
+                    if len(self.tokens) != 0:
+                        await pool.put(self.setup(token))
                     else:
-                        proxy = None
-                    await pool.put(self.login(token, proxy))
-                else:
-                    self.stop()
+                        self.stop()
 
-        if len(self.tokens) == 0:
-            self.stop()
+            if len(self.tokens) == 0:
+                self.stop()
 
-        print()
-        logging.info("Joining server.")
-        print()
-
-        async with TaskPool(1_000) as pool:
-            for token in self.tokens:
-                if len(self.tokens) != 0:
-                    if self.use_proxies:
-                        proxy = "%s://%s" % (self.proxy_type, random.choice(self.proxies))
-                    else:
-                        proxy = None
-                    await pool.put(self.join(token, proxy))
-                    if self.delay != 0: await asyncio.sleep(self.delay)
-                else:
-                    self.stop()
-
-        if len(self.tokens) == 0:
-            self.stop()
-
-        print()
-        logging.info("Scraping Users...\nPlease be patient")
-        print()
-
-
-        members = scrape(self.tokens[0], self.guild_id, self.channel_id)
-        for member in members:
-            if member not in self.users:
-                self.users.append(member)
-
-
-        print()
-        logging.info(f"Successfully scraped {self.red}%s{self.rst} members" % (len(self.users)))
-        logging.info("Sending messages.")
-        print()
-
-        if len(self.tokens) == 0: self.stop()
-
-        async with TaskPool(1_000) as pool:
-            for user in self.users:
-                if len(self.tokens) != 0:
-                    if str(user) not in self.blacklisted_users:
+        async def check_tokens():
+            async with TaskPool(1_000) as pool:
+                for token in self.tokens:
+                    if len(self.tokens) != 0:
                         if self.use_proxies:
                             proxy = "%s://%s" % (self.proxy_type, random.choice(self.proxies))
                         else:
                             proxy = None
-                        await pool.put(self.send(random.choice(self.tokens), user, proxy))
+                        await pool.put(self.login(token, proxy))
+                    else:
+                        self.stop()
+
+            if len(self.tokens) == 0:
+                self.stop()
+
+        async def join_server():
+            self.invite = input(f"{self.question}Invite{self.arrow}discord.gg/").replace("/", "").replace("discord.com",
+                                                                                                          "").replace(
+                "discord.gg", "").replace("invite", "").replace("https:", "").replace("http:", "").replace(
+                "discordapp.com", "")
+            print()
+            logging.info("Joining server.")
+            print()
+
+            async with TaskPool(1_000) as pool:
+                for token in self.tokens:
+                    if len(self.tokens) != 0:
+                        if self.use_proxies:
+                            proxy = "%s://%s" % (self.proxy_type, random.choice(self.proxies))
+                        else:
+                            proxy = None
+                        await pool.put(self.join(token, proxy))
                         if self.delay != 0: await asyncio.sleep(self.delay)
                     else:
-                        logging.info(f"{self.err}Blacklisted User: {self.red}%s{self.rst}" % (user))
-                else:
-                    table()
-                    self.stop()
+                        self.stop()
 
-        if self.leaving == "y":
+            if len(self.tokens) == 0:
+                self.stop()
+            return "success"
+
+        async def scrape_users():
+            self.guild_id = input(f"{self.question}Enter Guild ID{self.arrow}")
+            self.channel_id = input(f"{self.question}Enter Channel ID{self.arrow}")
+            self.invite = input(f"{self.question}Invite{self.arrow}discord.gg/").replace("/", "").replace("discord.com",
+                                                                                                          "").replace(
+                "discord.gg", "").replace("invite", "").replace("https:", "").replace("http:", "").replace(
+                "discordapp.com", "")
+            try:
+                headers = await self.headers(self.tokens[0])
+                async with ClientSession(headers=headers) as hoemotion:
+                    async with hoemotion.get("https://discord.com/api/v9/invites/%s?with_counts=true&with_expiration=true" % (self.invite), json={}) as response:
+                        json = await response.json()
+                        if response.status == 200:
+                            self.guild_name = json["guild"]["name"]
+                        else:
+                            self.tokens.remove(token)
+                            self.guild_name = "Unknown Guild"
+            except:
+                self.guild_name = "Unknown Guild"
+
+
             print()
-            logging.info("Leaving %s" % self.guild_name)
+            logging.info("Scraping Users from %s...\nPlease be patient" % self.guild_name)
+            print()
+
+            members = scrape(self.tokens[0], self.guild_id, self.channel_id)
+            with open('data/users.txt', 'w') as t:
+                data = ''
+                for member in members:
+                    if member not in self.users:
+                        self.users.append(member)
+                        data += member + '\n'
+                t.write(data)
+
+            print()
+            logging.info(f"Successfully scraped {self.red}%s{self.rst} members" % (len(self.users)))
+            print()
+
+            if len(self.tokens) == 0: self.stop()
+            return "success"
+
+        async def mass_dm():
+            with open("data/users.txt", encoding="utf-8") as f:
+                self.users = [i.strip() for i in f]
+            logging.info("Sending messages to %s users." % (len(self.users)))
+            async with TaskPool(1_000) as pool:
+                for user in self.users:
+                    if len(self.tokens) != 0:
+                        if str(user) not in self.blacklisted_users:
+                            if self.use_proxies:
+                                proxy = "%s://%s" % (self.proxy_type, random.choice(self.proxies))
+                            else:
+                                proxy = None
+                            await pool.put(self.send(random.choice(self.tokens), user, proxy))
+                            if self.delay != 0: await asyncio.sleep(self.delay)
+                        else:
+                            logging.info(f"{self.err}Blacklisted User: {self.red}%s{self.rst}" % (user))
+                    else:
+                        table()
+                        self.stop()
+                return "success"
+
+        async def leave_guild():
+            self.guild_id = input(f"{self.question} Enter Guild ID{self.arrow}")
+
+            logging.info("Leaving %s" % self.guild_id)
             print()
             async with TaskPool(1_000) as pool:
                 if len(self.tokens) != 0:
@@ -644,11 +776,43 @@ class Discord(object):
                 else:
                     table()
                     self.stop()
-        else:
-            logging.info("All Tasks are done")
+            return "success"
+        print(f"""
+{self.opbracket2}1{self.closebrckt2} Join Server
+{self.opbracket2}2{self.closebrckt2} Leave Server
+{self.opbracket2}3{self.closebrckt2} Scrape Users
+{self.opbracket2}4{self.closebrckt2} Mass DM
+{self.opbracket2}5{self.closebrckt2} Check tokens
+{self.opbracket2}6{self.closebrckt2} Exit""")
+        list = ["1", "2", "3", "4", "5", "6"]
+        choose = input(f"{self.question} Please Enter your option{self.arrow}")
+        while choose not in list:
+            choose = input(f"{self.question} Please Enter your option{self.arrow}")
+        if choose == "1":
+            lol = await join_server()
+            if lol == "success":
+                return await self.start(first_start="false")
+        elif choose == "2":
+            lol = await leave_guild()
+            if lol == "success":
+                return await self.start(first_start="false")
+        elif choose == "3":
+            lol = await scrape_users()
+            if lol == "success":
+                return await self.start(first_start="false")
+        elif choose == "4":
+            lol = await mass_dm()
+            if lol == "success":
+                return await self.start(first_start="false")
+        elif choose == "5":
+            lol = await check_tokens()
+            if lol == "success":
+                return await self.start(first_start="false")
+        elif choose == "6":
+            logging.info("Byee!")
             table()
             self.stop()
 
 if __name__ == "__main__":
     client = Discord()
-    asyncio.get_event_loop().run_until_complete(client.start())
+    asyncio.get_event_loop().run_until_complete(client.start(first_start="true"))
