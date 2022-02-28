@@ -80,9 +80,21 @@
 * [x] Add a rich table giving us detailed information
 * [ ] uploading Files (almost done)
 * [ ] Add delay rotating so it's not always the same speed
-* [x] Remember fingerprint, superproperty, etc. for each token so its becomes less suspicious (I already have a concept for this)
+* [x] Remember fingerprint, superproperty, etc. for each token so its becomes less suspicious
 * [x] Make the functions seperated like in my old Karuma script or [DMDGO](https://github.com/V4NSH4J/discord-mass-DM-GO) (Vanshaj is a pro, you should go and check his repo out)
 * [ ] Make it multi-threaded
+* [ ] Add typing [OPTIONAL FEATURE]
+* [ ] Fix joining servers issue!?
+* [ ] Add offline scraper
+* [ ] Add reaction scraper
+* [ ] Log the actions in txt files
+* [ ] Add a guide for the retarded people
+* [ ] Add a name and pfp and about me changer
+* [ ] Add a name and pfp and about me scraper
+* [ ] Check if message lenght is okay
+* [ ] Add a DMs limit and a DMs each token limit [OPTIONAL FEATURE]
+* [ ] Avoid already dmed users (like when you dm multiple servers but the member has already been dmed from a previous server)
+* [ ] Wave to the member via the wumpus sticker [OPTIONAL FEATURE]
   
 ---------------------------------------
   
