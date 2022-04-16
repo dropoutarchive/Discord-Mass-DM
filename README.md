@@ -1,3 +1,9 @@
+# This tool was patched since we need to solve hcap's on dms from now on and im too lazy (and retarded) to fix this shit
+### I wont archive this repo so you guys might open a pull request
+### Thank you for the great time you can still contact me at [guilded.gg/karma](https://guilded.gg/karma)
+#### I might get back to coding but this time it will be something useful or something fun
+## Cheers
+
 <div id="top"></div>
 <p align="center">
   <img src="https://img.shields.io/github/contributors/hoemotion/Discord-Mass-DM.svg?style=for-the-badge"/>
