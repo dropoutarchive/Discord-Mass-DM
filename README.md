@@ -108,7 +108,7 @@
 
 ### Contact
 
-<a href = "https://t.me/hoemotion"><img src="https://img.icons8.com/color/48/000000/telegram-app--v5.png"/></a>
+<a href = "https://t.me/ahegahoe"><img src="https://img.icons8.com/color/48/000000/telegram-app--v5.png"/></a>
 
 <p>View dropout's contact information on his <a href = "https://dropout.black/">website</a><br>
 View my contact information on my <a href = "https://hoemotion.github.io/">website</a>
