@@ -20,7 +20,7 @@
   <a href="https://www.reddit.com/r/hoemotion/">
     <img src="https://img.shields.io/static/v1?label=reddit&message=Click%20here&color=FF4500&style=for-the-badge&logo=reddit" alt="Reddit-Community" width="200">
   </a>
-    <a href="https://t.me/hoemotion">
+    <a href="https://t.me/ahegahoe">
     <img src="https://img.shields.io/static/v1?label=Telegram&message=Click%20here&color=0088CC&style=for-the-badge&logo=telegram" alt="Element-Server" width="200">
   </a>
 
