@@ -20,8 +20,8 @@
   <a href="https://www.reddit.com/r/hoemotion/">
     <img src="https://img.shields.io/static/v1?label=reddit&message=Click%20here&color=FF4500&style=for-the-badge&logo=reddit" alt="Reddit-Community" width="200">
   </a>
-    <a href="https://matrix.to/#/#hoemotion:matrix.org">
-    <img src="https://img.shields.io/static/v1?label=Element&message=Click%20here&color=20C073&style=for-the-badge&logo=element" alt="Element-Server" width="200">
+    <a href="https://t.me/hoemotion">
+    <img src="https://img.shields.io/static/v1?label=Telegram&message=Click%20here&color=0088CC&style=for-the-badge&logo=telegram" alt="Element-Server" width="200">
   </a>
 
   <br>
@@ -108,14 +108,14 @@
 
 ### Contact
 
-<p align="left">
-<a href = "https://guilded.gg/karma"><img src="https://img.icons8.com/fluency/48/000000/guilded.png"/></a>
-  <a href = "https://reddit.com/r/hoemotion"><img src="https://img.icons8.com/doodle/48/000000/reddit--v4.png"/></a>
-<a href = "https://matrix.to/#/#hoemotion:matrix.org"><img src="https://img.icons8.com/ios/50/000000/matrix-logo.png"/></a>
-</p>
+<a href = "https://t.me/hoemotion"><img src="https://img.icons8.com/color/48/000000/telegram-app--v5.png"/></a>
 
 <p>View dropout's contact information on his <a href = "https://dropout.black/">website</a><br>
 View my contact information on my <a href = "https://hoemotion.github.io/">website</a>
 </p>
+
+## Join our Guilded Community
+
+<a href = "https://guilded.gg/karma"><img src="https://img.icons8.com/fluency/48/000000/guilded.png"/></a>
   
 
