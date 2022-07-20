@@ -1,0 +1,9 @@
+{
+  "send_embed": false,
+  "send_normal_message": true,
+  "blacklisted_roles": ["132324335", "535424242424", "43527181817"],
+  "blacklisted_users": ["6625345642642", "7354542"],
+  "captcha_get_url": "http://2captcha.com/res.php",
+  "captcha_submit_url": "http://2captcha.com/in.php",
+  "captcha_api_key": "Your API key"
+}
